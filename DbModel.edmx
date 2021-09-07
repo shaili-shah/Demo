@@ -5,6 +5,17 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="DemoModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="BankDetails">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="AccountNo" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="IFSC" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="PanCardNo" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="AadharCardNo" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="DetailId" Type="int" Nullable="false" />
+        </EntityType>
         <EntityType Name="Details">
           <Key>
             <PropertyRef Name="Id" />
@@ -15,17 +26,83 @@
           <Property Name="BirthDate" Type="datetime" Nullable="false" />
           <Property Name="Phone" Type="nvarchar" MaxLength="15" Nullable="false" />
           <Property Name="Email" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="FileId" Type="int" />
         </EntityType>
+        <EntityType Name="File">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="50" />
+          <Property Name="ContentType" Type="nvarchar" MaxLength="200" />
+          <Property Name="Data" Type="varbinary(max)" />
+        </EntityType>
+        <Association Name="FK_BankDetails_Details">
+          <End Role="Details" Type="Self.Details" Multiplicity="1" />
+          <End Role="BankDetails" Type="Self.BankDetails" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Details">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="BankDetails">
+              <PropertyRef Name="DetailId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Details_File">
+          <End Role="File" Type="Self.File" Multiplicity="0..1" />
+          <End Role="Details" Type="Self.Details" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="File">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Details">
+              <PropertyRef Name="FileId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityContainer Name="DemoModelStoreContainer">
+          <EntitySet Name="BankDetails" EntityType="Self.BankDetails" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Details" EntityType="Self.Details" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="File" EntityType="Self.File" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_BankDetails_Details" Association="Self.FK_BankDetails_Details">
+            <End Role="Details" EntitySet="Details" />
+            <End Role="BankDetails" EntitySet="BankDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Details_File" Association="Self.FK_Details_File">
+            <End Role="File" EntitySet="File" />
+            <End Role="Details" EntitySet="Details" />
+          </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="DemoModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
         <EntityContainer Name="DemoEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="BankDetails" EntityType="DemoModel.BankDetail" />
           <EntitySet Name="Details" EntityType="DemoModel.Detail" />
+          <EntitySet Name="Files" EntityType="DemoModel.File" />
+          <AssociationSet Name="FK_BankDetails_Details" Association="DemoModel.FK_BankDetails_Details">
+            <End Role="Detail" EntitySet="Details" />
+            <End Role="BankDetail" EntitySet="BankDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Details_File" Association="DemoModel.FK_Details_File">
+            <End Role="File" EntitySet="Files" />
+            <End Role="Detail" EntitySet="Details" />
+          </AssociationSet>
         </EntityContainer>
+        <EntityType Name="BankDetail">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="AccountNo" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="IFSC" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="PanCardNo" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="AadharCardNo" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="DetailId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Detail" Relationship="DemoModel.FK_BankDetails_Details" FromRole="BankDetail" ToRole="Detail" />
+        </EntityType>
         <EntityType Name="Detail">
           <Key>
             <PropertyRef Name="Id" />
@@ -36,21 +113,81 @@
           <Property Name="BirthDate" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="Phone" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="true" />
           <Property Name="Email" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="FileId" Type="Int32" />
+          <NavigationProperty Name="BankDetails" Relationship="DemoModel.FK_BankDetails_Details" FromRole="Detail" ToRole="BankDetail" />
+          <NavigationProperty Name="File" Relationship="DemoModel.FK_Details_File" FromRole="Detail" ToRole="File" />
         </EntityType>
+        <EntityType Name="File">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ContentType" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="Data" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <NavigationProperty Name="Details" Relationship="DemoModel.FK_Details_File" FromRole="File" ToRole="Detail" />
+        </EntityType>
+        <Association Name="FK_BankDetails_Details">
+          <End Type="DemoModel.Detail" Role="Detail" Multiplicity="1" />
+          <End Type="DemoModel.BankDetail" Role="BankDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Detail">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="BankDetail">
+              <PropertyRef Name="DetailId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Details_File">
+          <End Type="DemoModel.File" Role="File" Multiplicity="0..1" />
+          <End Type="DemoModel.Detail" Role="Detail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="File">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Detail">
+              <PropertyRef Name="FileId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="DemoModelStoreContainer" CdmEntityContainer="DemoEntities">
+          <EntitySetMapping Name="BankDetails">
+            <EntityTypeMapping TypeName="DemoModel.BankDetail">
+              <MappingFragment StoreEntitySet="BankDetails">
+                <ScalarProperty Name="DetailId" ColumnName="DetailId" />
+                <ScalarProperty Name="AadharCardNo" ColumnName="AadharCardNo" />
+                <ScalarProperty Name="PanCardNo" ColumnName="PanCardNo" />
+                <ScalarProperty Name="IFSC" ColumnName="IFSC" />
+                <ScalarProperty Name="AccountNo" ColumnName="AccountNo" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="Details">
             <EntityTypeMapping TypeName="DemoModel.Detail">
               <MappingFragment StoreEntitySet="Details">
+                <ScalarProperty Name="FileId" ColumnName="FileId" />
                 <ScalarProperty Name="Email" ColumnName="Email" />
                 <ScalarProperty Name="Phone" ColumnName="Phone" />
                 <ScalarProperty Name="BirthDate" ColumnName="BirthDate" />
                 <ScalarProperty Name="LastName" ColumnName="LastName" />
                 <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Files">
+            <EntityTypeMapping TypeName="DemoModel.File">
+              <MappingFragment StoreEntitySet="File">
+                <ScalarProperty Name="Data" ColumnName="Data" />
+                <ScalarProperty Name="ContentType" ColumnName="ContentType" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>

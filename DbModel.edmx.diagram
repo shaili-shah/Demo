@@ -5,7 +5,11 @@
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
       <Diagram DiagramId="545b04df9b1343df8b0d29a768294e2e" Name="Diagram1">
-        <EntityTypeShape EntityType="DemoModel.Detail" Width="1.5" PointX="0.75" PointY="0.75" />
+        <EntityTypeShape EntityType="DemoModel.BankDetail" Width="1.5" PointX="5.25" PointY="1.125" />
+        <EntityTypeShape EntityType="DemoModel.Detail" Width="1.5" PointX="3" PointY="1" />
+        <EntityTypeShape EntityType="DemoModel.File" Width="1.5" PointX="0.75" PointY="1.375" />
+        <AssociationConnector Association="DemoModel.FK_BankDetails_Details" />
+        <AssociationConnector Association="DemoModel.FK_Details_File" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

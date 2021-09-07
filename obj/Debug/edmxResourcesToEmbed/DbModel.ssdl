@@ -1,5 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Schema Namespace="DemoModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="BankDetails">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="AccountNo" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="IFSC" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="PanCardNo" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="AadharCardNo" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="DetailId" Type="int" Nullable="false" />
+  </EntityType>
   <EntityType Name="Details">
     <Key>
       <PropertyRef Name="Id" />
@@ -10,8 +21,52 @@
     <Property Name="BirthDate" Type="datetime" Nullable="false" />
     <Property Name="Phone" Type="nvarchar" MaxLength="15" Nullable="false" />
     <Property Name="Email" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="FileId" Type="int" />
   </EntityType>
+  <EntityType Name="File">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="varchar" MaxLength="50" />
+    <Property Name="ContentType" Type="nvarchar" MaxLength="200" />
+    <Property Name="Data" Type="varbinary(max)" />
+  </EntityType>
+  <Association Name="FK_BankDetails_Details">
+    <End Role="Details" Type="Self.Details" Multiplicity="1" />
+    <End Role="BankDetails" Type="Self.BankDetails" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Details">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="BankDetails">
+        <PropertyRef Name="DetailId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Details_File">
+    <End Role="File" Type="Self.File" Multiplicity="0..1" />
+    <End Role="Details" Type="Self.Details" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="File">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Details">
+        <PropertyRef Name="FileId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
   <EntityContainer Name="DemoModelStoreContainer">
+    <EntitySet Name="BankDetails" EntityType="Self.BankDetails" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Details" EntityType="Self.Details" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="File" EntityType="Self.File" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK_BankDetails_Details" Association="Self.FK_BankDetails_Details">
+      <End Role="Details" EntitySet="Details" />
+      <End Role="BankDetails" EntitySet="BankDetails" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Details_File" Association="Self.FK_Details_File">
+      <End Role="File" EntitySet="File" />
+      <End Role="Details" EntitySet="Details" />
+    </AssociationSet>
   </EntityContainer>
 </Schema>

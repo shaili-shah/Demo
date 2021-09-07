@@ -1,14 +1,37 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
   <EntityContainerMapping StorageEntityContainer="DemoModelStoreContainer" CdmEntityContainer="DemoEntities">
+    <EntitySetMapping Name="BankDetails">
+      <EntityTypeMapping TypeName="DemoModel.BankDetail">
+        <MappingFragment StoreEntitySet="BankDetails">
+          <ScalarProperty Name="DetailId" ColumnName="DetailId" />
+          <ScalarProperty Name="AadharCardNo" ColumnName="AadharCardNo" />
+          <ScalarProperty Name="PanCardNo" ColumnName="PanCardNo" />
+          <ScalarProperty Name="IFSC" ColumnName="IFSC" />
+          <ScalarProperty Name="AccountNo" ColumnName="AccountNo" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
     <EntitySetMapping Name="Details">
       <EntityTypeMapping TypeName="DemoModel.Detail">
         <MappingFragment StoreEntitySet="Details">
+          <ScalarProperty Name="FileId" ColumnName="FileId" />
           <ScalarProperty Name="Email" ColumnName="Email" />
           <ScalarProperty Name="Phone" ColumnName="Phone" />
           <ScalarProperty Name="BirthDate" ColumnName="BirthDate" />
           <ScalarProperty Name="LastName" ColumnName="LastName" />
           <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Files">
+      <EntityTypeMapping TypeName="DemoModel.File">
+        <MappingFragment StoreEntitySet="File">
+          <ScalarProperty Name="Data" ColumnName="Data" />
+          <ScalarProperty Name="ContentType" ColumnName="ContentType" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
           <ScalarProperty Name="Id" ColumnName="Id" />
         </MappingFragment>
       </EntityTypeMapping>

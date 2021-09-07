@@ -1,8 +1,30 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Schema Namespace="DemoModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
   <EntityContainer Name="DemoEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="BankDetails" EntityType="DemoModel.BankDetail" />
     <EntitySet Name="Details" EntityType="DemoModel.Detail" />
+    <EntitySet Name="Files" EntityType="DemoModel.File" />
+    <AssociationSet Name="FK_BankDetails_Details" Association="DemoModel.FK_BankDetails_Details">
+      <End Role="Detail" EntitySet="Details" />
+      <End Role="BankDetail" EntitySet="BankDetails" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Details_File" Association="DemoModel.FK_Details_File">
+      <End Role="File" EntitySet="Files" />
+      <End Role="Detail" EntitySet="Details" />
+    </AssociationSet>
   </EntityContainer>
+  <EntityType Name="BankDetail">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="AccountNo" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="IFSC" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="PanCardNo" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="AadharCardNo" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="DetailId" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="Detail" Relationship="DemoModel.FK_BankDetails_Details" FromRole="BankDetail" ToRole="Detail" />
+  </EntityType>
   <EntityType Name="Detail">
     <Key>
       <PropertyRef Name="Id" />
@@ -13,5 +35,42 @@
     <Property Name="BirthDate" Type="DateTime" Nullable="false" Precision="3" />
     <Property Name="Phone" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="true" />
     <Property Name="Email" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="FileId" Type="Int32" />
+    <NavigationProperty Name="BankDetails" Relationship="DemoModel.FK_BankDetails_Details" FromRole="Detail" ToRole="BankDetail" />
+    <NavigationProperty Name="File" Relationship="DemoModel.FK_Details_File" FromRole="Detail" ToRole="File" />
   </EntityType>
+  <EntityType Name="File">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="ContentType" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+    <Property Name="Data" Type="Binary" MaxLength="Max" FixedLength="false" />
+    <NavigationProperty Name="Details" Relationship="DemoModel.FK_Details_File" FromRole="File" ToRole="Detail" />
+  </EntityType>
+  <Association Name="FK_BankDetails_Details">
+    <End Type="DemoModel.Detail" Role="Detail" Multiplicity="1" />
+    <End Type="DemoModel.BankDetail" Role="BankDetail" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Detail">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="BankDetail">
+        <PropertyRef Name="DetailId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Details_File">
+    <End Type="DemoModel.File" Role="File" Multiplicity="0..1" />
+    <End Type="DemoModel.Detail" Role="Detail" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="File">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Detail">
+        <PropertyRef Name="FileId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
 </Schema>

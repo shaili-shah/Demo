@@ -25,6 +25,8 @@ namespace Demo
             throw new UnintentionalCodeFirstException();
         }
     
+        public virtual DbSet<BankDetail> BankDetails { get; set; }
         public virtual DbSet<Detail> Details { get; set; }
+        public virtual DbSet<File> Files { get; set; }
     }
 }

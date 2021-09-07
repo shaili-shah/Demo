@@ -1,24 +1,24 @@
 ﻿@model  List<Demo.Models.TeamModel>
-<script src="~/scripts/jquery-1.12.4.min.js"></script>
-<script src="~/scripts/Grid/jquery.dataTables.min.js"></script>
-<script src="~/scripts/Grid/jszip.min.js"></script>
-<script src="~/scripts/Grid/dataTables.buttons.min.js"></script>
-<script src="~/scripts/Grid/buttons.html5.min.js"></script>
-<script src="~/scripts/Grid/jquery-ui.min.js"></script>
-<link href="~/Content/jquery.dataTables.min.css" rel="stylesheet" />
+
+<script src="~/Scripts/jquery-3.4.1.js"></script>
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+
+<!-- #region datatables files -->
+<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css" />
+<script src="//cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
+
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.10.16/b-1.5.1/b-html5-1.5.1/datatables.min.css" />
+
+<script type="text/javascript" src="https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.10.16/b-1.5.1/b-html5-1.5.1/datatables.min.js"></script>
+<!-- #endregion -->
+<h1>Team</h1>
 
 @if (Model.Count > 0)
 {
-    <br />
-
-    <br />
-
-
-
-    <table id="tblGrid">
+    <table id="tblGrid" class="display" style="width:100%">
         <thead>
-            <tr>                
-                <th>Name</th>                
+            <tr>
+                <th>Name</th>
             </tr>
         </thead>
         <tbody>
@@ -26,29 +26,28 @@
             @foreach (var data in Model)
             {
                 <tr>
-                    <td>@data.Name </td>                   
+                    <td>@data.Name </td>
                 </tr>
 
             }
 
         </tbody>
     </table>
-
 }
 <script>
 
-
     $(document).ready(function () {
-       gridDataTableView("Grid Example.xls");
+        $('#tblGrid').DataTable({
+            dom: 'Bfrtip',
+            buttons: [
+                {
+                    text: 'Add',
+                    action: function (e, dt, node, config) {
+                        alert('Button activated');
+                    }                    
+                }
+            ]
+        });
     });
 
-    gridDataTableView = function (fname) {
-        $('#tblGrid').dataTable({
-            "bFilter": true,
-            "bLengthChange": false, "bPaginate": true, "bInfo": true,
-            dom: 'Bfrtip',
-            "order": [[0, 'desc'], [1, 'desc']],
-            buttons: [{ extend: 'excelHtml5', text: 'Export to Excel', className: 'link_button', title: fname }]
-        });
-    }
 </script>

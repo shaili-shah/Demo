@@ -12,24 +12,20 @@ namespace Demo
     using System;
     using System.Collections.Generic;
     
-    public partial class Detail
+    public partial class File
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Detail()
+        public File()
         {
-            this.BankDetails = new HashSet<BankDetail>();
+            this.Details = new HashSet<Detail>();
         }
     
         public int Id { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public System.DateTime BirthDate { get; set; }
-        public string Phone { get; set; }
-        public string Email { get; set; }
-        public Nullable<int> FileId { get; set; }
+        public string Name { get; set; }
+        public string ContentType { get; set; }
+        public byte[] Data { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<BankDetail> BankDetails { get; set; }
-        public virtual File File { get; set; }
+        public virtual ICollection<Detail> Details { get; set; }
     }
 }
