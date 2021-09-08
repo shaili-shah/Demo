@@ -1,4 +1,5 @@
-﻿using Demo.Models;
+﻿using AutoMapper;
+using Demo.Models;
 using Demo.Repository;
 using System.Collections.Generic;
 using System.IO;
@@ -11,6 +12,8 @@ namespace Demo.Controllers
     {
 
         private IDetail Ide;
+
+       
 
         public DetailController()
         {
@@ -29,6 +32,43 @@ namespace Demo.Controllers
                 lstmodel.Add(model);
             }
             return View(lstmodel);
+        }
+
+
+        public ActionResult TeamDetail()
+        {
+            return View();
+        }
+
+       [HttpPost]
+        public ActionResult TeamDetail(TeamDetailModel model, HttpPostedFileBase postedFile , HttpPostedFileBase postedResumeFile)
+        {
+            //if (ModelState.IsValid)
+            //{
+                byte[] bytes;
+
+                if (postedFile != null)
+                {
+                    using (BinaryReader br = new BinaryReader(postedFile.InputStream))
+                    {
+                        bytes = br.ReadBytes(postedFile.ContentLength);
+                    }
+
+                    FileModel fileModel = new FileModel
+                    {
+                        Name = Path.GetFileName(postedFile.FileName),
+                        ContentType = postedFile.ContentType,
+                        Data = bytes
+                    };
+                    model.FileModel = fileModel;
+                }
+           
+
+            Ide.AddTeamDetail(model);
+
+
+            //}
+            return RedirectToAction("Index");
         }
 
         public ActionResult Detail(int? activeTab)

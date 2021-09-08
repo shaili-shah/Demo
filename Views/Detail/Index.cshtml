@@ -41,14 +41,15 @@
                 {
                     text: 'Add',
                     action: function (e, dt, node, config) {
-                         personalDetails();
+                         //personalDetails();
+                        TeamDetail();
                     }                    
                 }
             ]
         });
 
-        function personalDetails() {           
-            window.location.href = "@Url.Action("Detail","Detail")"
+        function TeamDetail() {
+            window.location.href = "@Url.Action("TeamDetail", "Detail")"
         }
 
     });

@@ -6,10 +6,13 @@
     <edmx:Diagrams>
       <Diagram DiagramId="545b04df9b1343df8b0d29a768294e2e" Name="Diagram1">
         <EntityTypeShape EntityType="DemoModel.BankDetail" Width="1.5" PointX="5.25" PointY="1.125" />
-        <EntityTypeShape EntityType="DemoModel.Detail" Width="1.5" PointX="3" PointY="1" />
-        <EntityTypeShape EntityType="DemoModel.File" Width="1.5" PointX="0.75" PointY="1.375" />
+        <EntityTypeShape EntityType="DemoModel.Detail" Width="1.5" PointX="3" PointY="2.25" />
+        <EntityTypeShape EntityType="DemoModel.File" Width="1.5" PointX="0.75" PointY="2.75" />
+        <EntityTypeShape EntityType="DemoModel.ProfessionalDetail" Width="1.5" PointX="5.25" PointY="4.25" />
+        <EntityTypeShape EntityType="DemoModel.Skill" Width="1.5" PointX="0.75" PointY="6.75" />
         <AssociationConnector Association="DemoModel.FK_BankDetails_Details" />
         <AssociationConnector Association="DemoModel.FK_Details_File" />
+        <AssociationConnector Association="DemoModel.FK_ProfessionalDetail_Details" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

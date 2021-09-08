@@ -7,6 +7,10 @@ namespace Demo.Repository
     {
         IEnumerable<Detail> GetPersonalDetail();
 
-        bool AddPersonalDetail(PersonalDetailModel model);
+        bool AddTeamDetail(TeamDetailModel model);
+
+        Detail AddPersonalDetail(PersonalDetailModel model);
+
+        bool AddBankDetail(BankDetailModel model);
     }
 }
