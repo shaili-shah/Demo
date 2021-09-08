@@ -164,3 +164,5 @@ C:\Users\Albiorix Technology\Desktop\projects\Repo\obj\Debug\Demo.csproj.CoreCom
 C:\Users\Albiorix Technology\Desktop\projects\Repo\obj\Debug\Demo.csproj.CopyComplete
 C:\Users\Albiorix Technology\Desktop\projects\Repo\obj\Debug\Demo.dll
 C:\Users\Albiorix Technology\Desktop\projects\Repo\obj\Debug\Demo.pdb
+C:\Users\Albiorix Technology\Desktop\projects\Repo\bin\AutoMapper.dll
+C:\Users\Albiorix Technology\Desktop\projects\Repo\bin\AutoMapper.xml
