@@ -59,6 +59,10 @@ namespace Demo.Repository
             _context.CurrentStatus.Add(currentStatus);
         }
 
+        public void InsertRangeExprienceDetail(List<ExprienceDetail> lstExprienceDetails)
+        {
+            _context.ExprienceDetails.AddRange(lstExprienceDetails);
+        }
 
         public void Save()
         {
@@ -74,6 +78,7 @@ namespace Demo.Repository
                 cfg.CreateMap<TeamDetailModel, BankDetailModel>();
                 cfg.CreateMap<TeamDetailModel, ProfessionalDetailModel>();
                 cfg.CreateMap<TeamDetailModel, CurrentStatusModel>();
+                cfg.CreateMap<TeamModel, ExprienceDetailModel>();
 
             });
 
@@ -105,6 +110,12 @@ namespace Demo.Repository
             currentStatusModel = mapper.Map<TeamDetailModel, CurrentStatusModel>(model);
             currentStatusModel.DetailId = detail.Id;
             AddCurrentStatus(currentStatusModel);
+
+            // exprience detail
+            List<ExprienceDetailModel> lstExprienceDetailModel = new List<ExprienceDetailModel>();
+            model.LstExprienceDetailModel.ToList().ForEach(s => s.DetailId = detail.Id);
+            lstExprienceDetailModel = model.LstExprienceDetailModel;
+            AddExpriencesDetail(lstExprienceDetailModel);
 
             return true;
         }
@@ -186,6 +197,21 @@ namespace Demo.Repository
             var data = mapper.Map<CurrentStatusModel, CurrentStatu>(model);
 
             InsertCurrentStatus(data);
+            Save();
+
+            return true;
+        }
+
+        public bool AddExpriencesDetail(List<ExprienceDetailModel> lstmodel)
+        {
+            var config = new MapperConfiguration(cfg => {
+                cfg.CreateMap<ExprienceDetailModel, ExprienceDetail>();
+            });
+
+            IMapper mapper = config.CreateMapper();
+            var data = mapper.Map<List<ExprienceDetailModel>, List<ExprienceDetail>>(lstmodel);
+
+            InsertRangeExprienceDetail(data);
             Save();
 
             return true;

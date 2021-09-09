@@ -89,12 +89,23 @@ namespace Demo.Controllers
                 model.ResumeFileModel = fileModel;
             }
 
+            if(model != null && model.LstExprienceDetailModel != null && model.LstExprienceDetailModel.Any()) 
+            {
+                model.LstExprienceDetailModel = model.LstExprienceDetailModel.Where(x => x.Company != null).ToList();
+            }
+
 
             Ide.AddTeamDetail(model);
 
 
             //}
             return RedirectToAction("Index");
+        }
+
+        public ActionResult NewExprienceDetailRow(int id)
+        {
+            var model = new ExprienceDetailModel { Id = id };
+            return View("_NewExprienceDetailRow", model);
         }
 
         public ActionResult Detail(int? activeTab)

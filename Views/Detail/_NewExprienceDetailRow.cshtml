@@ -1,0 +1,55 @@
+﻿@model Demo.Models.ExprienceDetailModel
+@{
+    Layout = null;
+}
+
+<style>
+    .set-table {
+        margin-top: 20px;
+        padding-top: 20px;
+        padding-left: 20px;
+        margin-bottom: 20px;
+    }
+    .removeButton {
+        width: 15%;
+        float: right;
+        margin-right: 10px;
+    }
+</style>
+
+<div class="table-bordered set-table">
+    <input type="hidden" id="LstExprienceDetailModel_@(Model.Id)__Id" class="iHidden" name="LstExprienceDetailModel[@Model.Id].Id">
+
+    <input type="button" value="remove" class="removeButton btn btn-danger">
+
+    <div class="form-group">
+        <label>Company</label>
+        <input type='text' class="form-control" id='LstExprienceDetailModel_@(Model.Id)__Company' name='LstExprienceDetailModel[@Model.Id].Company' />
+    </div>
+
+    <div class="form-group">
+        <label>Designation</label>
+        <input type='text' class="form-control" id='LstExprienceDetailModel_@(Model.Id)__Designation' name='LstExprienceDetailModel[@Model.Id].Designation' />
+    </div>
+
+    <div class="form-group">
+        <label>Department</label>
+        <input type='text' class="form-control" id='LstExprienceDetailModel_@(Model.Id)__Department' name='LstExprienceDetailModel[@Model.Id].Department' />
+    </div>
+
+    <div class="form-group">
+        <label>CTC</label>
+        <input type='text' class="form-control" id='LstExprienceDetailModel_@(Model.Id)__CTC' name='LstExprienceDetailModel[@Model.Id].CTC' />
+    </div>
+
+    <div class="form-group">
+        <label>From</label>
+        <input type='date' class="form-control" id='LstExprienceDetailModel_@(Model.Id)__From' name='LstExprienceDetailModel[@Model.Id].From' />
+    </div>
+
+    <div class="form-group">
+        <label>To</label>
+        <input type='date' class="form-control" id='LstExprienceDetailModel_@(Model.Id)__To' name='LstExprienceDetailModel[@Model.Id].To' />
+    </div>
+
+</div>

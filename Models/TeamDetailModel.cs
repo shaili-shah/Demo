@@ -9,6 +9,7 @@ namespace Demo.Models
         public TeamDetailModel()
         {
             SkillIds = new List<int>();
+            LstExprienceDetailModel = new List<ExprienceDetailModel>();
         }
        
         public int Id { get; set; }
@@ -61,6 +62,9 @@ namespace Demo.Models
         public string CTC { get; set; }
 
         public DateTime WorkingFrom { get; set; }
+
+        // exprience detail
+        public List<ExprienceDetailModel> LstExprienceDetailModel { get; set; }
 
     }
 }

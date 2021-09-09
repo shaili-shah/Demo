@@ -28,6 +28,7 @@ namespace Demo
         public virtual DbSet<BankDetail> BankDetails { get; set; }
         public virtual DbSet<CurrentStatu> CurrentStatus { get; set; }
         public virtual DbSet<Detail> Details { get; set; }
+        public virtual DbSet<ExprienceDetail> ExprienceDetails { get; set; }
         public virtual DbSet<File> Files { get; set; }
         public virtual DbSet<ProfessionalDetail> ProfessionalDetails { get; set; }
         public virtual DbSet<Skill> Skills { get; set; }

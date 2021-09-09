@@ -85,6 +85,13 @@
         .step.finish {
             background-color: #04AA6D;
         }
+
+    .set-btn {
+        margin-left: 26%;
+        margin-top: 10px;
+        margin-bottom: 20px;
+    }
+
 </style>
 
 <body>
@@ -208,6 +215,16 @@
             </div>
 
         </div>
+
+        <div class="tab">
+
+            <input type="button" id="btnAdd" value="Add New Exprience" class="btn btn-primary set-btn" />
+
+            <div id="container"> </div>
+
+        </div>
+
+
         <div style="overflow:auto;">
             <div style="float:right;">
                 <button type="button" id="prevBtn" onclick="nextPrev(-1)">Previous</button>
@@ -216,6 +233,7 @@
         </div>
         <!-- Circles which indicates the steps of the form: -->
         <div style="text-align:center;margin-top:40px;">
+            <span class="step"></span>
             <span class="step"></span>
             <span class="step"></span>
             <span class="step"></span>
@@ -229,6 +247,23 @@
     $("#SkillIds").select2({
         width: "200"
     });
+
+    $(function () {
+        $("#btnAdd").click(function (e) {
+           
+        var itemIndex = $("#container input.iHidden").length;
+            e.preventDefault();
+
+        $.get("@Url.Action("NewExprienceDetailRow", "Detail")/"+itemIndex,function(data){
+            $("#container").append(data);
+        });
+    });
+  });
+
+    $(document).on('click', '.removeButton', function () {
+        $(this).closest('div.table-bordered').remove();
+    });
+
 
     var loadFile = function (event) {
         var image = document.getElementById('output');
@@ -263,7 +298,7 @@
         // Exit the function if any field in the current tab is invalid:
 
 
-        if (n == 1 && !validateForm()) return false;
+        //if (n == 1 && !validateForm()) return false;
 
 
         // Hide the current tab:
@@ -271,7 +306,7 @@
         // Increase or decrease the current tab by 1:
         currentTab = currentTab + n;
         // if you have reached the end of the form...
-        if (currentTab >= x.length) {
+        if (currentTab >= x.length) {            
             // ... the form gets submitted:
             $('#teamDetailForm').submit();
 

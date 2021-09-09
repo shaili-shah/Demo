@@ -18,5 +18,7 @@ namespace Demo.Repository
         bool AddProfessionalDetail(ProfessionalDetailModel model);
 
         bool AddCurrentStatus(CurrentStatusModel model);
+
+        bool AddExpriencesDetail(List<ExprienceDetailModel> lstmodel);
     }
 }
