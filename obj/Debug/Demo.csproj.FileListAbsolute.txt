@@ -134,6 +134,7 @@ C:\Users\Albiorix Technology\Desktop\projects\Repo\bin\roslyn\vbc.rsp
 C:\Users\Albiorix Technology\Desktop\projects\Repo\bin\roslyn\VBCSCompiler.exe
 C:\Users\Albiorix Technology\Desktop\projects\Repo\bin\roslyn\VBCSCompiler.exe.config
 C:\Users\Albiorix Technology\Desktop\projects\Repo\bin\Antlr3.Runtime.dll
+C:\Users\Albiorix Technology\Desktop\projects\Repo\bin\AutoMapper.dll
 C:\Users\Albiorix Technology\Desktop\projects\Repo\bin\EntityFramework.dll
 C:\Users\Albiorix Technology\Desktop\projects\Repo\bin\EntityFramework.SqlServer.dll
 C:\Users\Albiorix Technology\Desktop\projects\Repo\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll
@@ -147,6 +148,7 @@ C:\Users\Albiorix Technology\Desktop\projects\Repo\bin\System.Web.WebPages.Deplo
 C:\Users\Albiorix Technology\Desktop\projects\Repo\bin\System.Web.WebPages.dll
 C:\Users\Albiorix Technology\Desktop\projects\Repo\bin\System.Web.WebPages.Razor.dll
 C:\Users\Albiorix Technology\Desktop\projects\Repo\bin\WebGrease.dll
+C:\Users\Albiorix Technology\Desktop\projects\Repo\bin\AutoMapper.xml
 C:\Users\Albiorix Technology\Desktop\projects\Repo\bin\EntityFramework.xml
 C:\Users\Albiorix Technology\Desktop\projects\Repo\bin\EntityFramework.SqlServer.xml
 C:\Users\Albiorix Technology\Desktop\projects\Repo\bin\System.Web.Helpers.xml
@@ -159,10 +161,8 @@ C:\Users\Albiorix Technology\Desktop\projects\Repo\bin\System.Web.WebPages.Razor
 C:\Users\Albiorix Technology\Desktop\projects\Repo\bin\Newtonsoft.Json.xml
 C:\Users\Albiorix Technology\Desktop\projects\Repo\bin\Antlr3.Runtime.pdb
 C:\Users\Albiorix Technology\Desktop\projects\Repo\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
-C:\Users\Albiorix Technology\Desktop\projects\Repo\obj\Debug\Demo.csproj.AssemblyReference.cache
 C:\Users\Albiorix Technology\Desktop\projects\Repo\obj\Debug\Demo.csproj.CoreCompileInputs.cache
 C:\Users\Albiorix Technology\Desktop\projects\Repo\obj\Debug\Demo.csproj.CopyComplete
 C:\Users\Albiorix Technology\Desktop\projects\Repo\obj\Debug\Demo.dll
 C:\Users\Albiorix Technology\Desktop\projects\Repo\obj\Debug\Demo.pdb
-C:\Users\Albiorix Technology\Desktop\projects\Repo\bin\AutoMapper.dll
-C:\Users\Albiorix Technology\Desktop\projects\Repo\bin\AutoMapper.xml
+C:\Users\Albiorix Technology\Desktop\projects\Repo\obj\Debug\Demo.csproj.AssemblyReference.cache

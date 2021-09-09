@@ -137,6 +137,9 @@
     </Compile>
     <Compile Include="Controllers\DetailController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="CurrentStatu.cs">
+      <DependentUpon>DbModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="DbModel.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -162,13 +165,21 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\BankDetailModel.cs" />
+    <Compile Include="Models\CurrentStatusModel.cs" />
     <Compile Include="Models\FileModel.cs" />
     <Compile Include="Models\PersonalDetailModel.cs" />
+    <Compile Include="Models\ProfessionalDetailModel.cs" />
     <Compile Include="Models\TeamDetailModel.cs" />
     <Compile Include="Models\TeamModel.cs" />
+    <Compile Include="ProfessionalDetail.cs">
+      <DependentUpon>DbModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repository\DetailRepository.cs" />
     <Compile Include="Repository\IDetail.cs" />
+    <Compile Include="Skill.cs">
+      <DependentUpon>DbModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="TabEnum.cs" />
   </ItemGroup>
   <ItemGroup>

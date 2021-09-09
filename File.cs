@@ -18,6 +18,7 @@ namespace Demo
         public File()
         {
             this.Details = new HashSet<Detail>();
+            this.ProfessionalDetails = new HashSet<ProfessionalDetail>();
         }
     
         public int Id { get; set; }
@@ -27,5 +28,7 @@ namespace Demo
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Detail> Details { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ProfessionalDetail> ProfessionalDetails { get; set; }
     }
 }

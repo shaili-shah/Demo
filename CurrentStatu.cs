@@ -12,16 +12,16 @@ namespace Demo
     using System;
     using System.Collections.Generic;
     
-    public partial class ProfessionalDetail
+    public partial class CurrentStatu
     {
         public int Id { get; set; }
-        public Nullable<int> Year { get; set; }
-        public Nullable<int> Month { get; set; }
-        public string SkillIds { get; set; }
+        public string Company { get; set; }
+        public string Designation { get; set; }
+        public string Department { get; set; }
+        public string CTC { get; set; }
+        public System.DateTime WorkingFrom { get; set; }
         public int DetailId { get; set; }
-        public Nullable<int> FileId { get; set; }
     
         public virtual Detail Detail { get; set; }
-        public virtual File File { get; set; }
     }
 }

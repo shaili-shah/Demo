@@ -7,10 +7,16 @@ namespace Demo.Repository
     {
         IEnumerable<Detail> GetPersonalDetail();
 
+        IEnumerable<Skill> GetAllSkills();
+
         bool AddTeamDetail(TeamDetailModel model);
 
         Detail AddPersonalDetail(PersonalDetailModel model);
 
         bool AddBankDetail(BankDetailModel model);
+
+        bool AddProfessionalDetail(ProfessionalDetailModel model);
+
+        bool AddCurrentStatus(CurrentStatusModel model);
     }
 }

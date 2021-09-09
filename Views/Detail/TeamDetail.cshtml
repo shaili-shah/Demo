@@ -4,6 +4,9 @@
 <script src="~/Scripts/jquery-3.4.1.js"></script>
 <script src="~/Scripts/jquery-3.4.1.min.js"></script>
 
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
 <style>
     * {
         box-sizing: border-box;
@@ -84,120 +87,148 @@
         }
 </style>
 
-<body>   
-        <form id="teamDetailForm" action="@Url.Action("TeamDetail","Detail")" enctype = "multipart/form-data" method="post">
-            <h1>Details:</h1>
-            <!-- One "tab" for each step in the form: -->
-            <div class="tab">
+<body>
+    <form id="teamDetailForm" action="@Url.Action("TeamDetail","Detail")" enctype="multipart/form-data" method="post">
+        <h1>Details:</h1>
+        <!-- One "tab" for each step in the form: -->
+        <div class="tab">
 
-                Personal Details :
+            Personal Details :
 
-                <div class="form-group">
-                    <p><img id="output" width="200" /></p>
-                    <input type="file" name="postedFile" accept="image/*" onchange="loadFile(event)" />
-                </div>
-
-                <div class="form-group">
-                    @Html.LabelFor(m => m.FirstName)
-                    @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control", required = true })
-                    @Html.ValidationMessageFor(m => m.FirstName, "", new { @class = "text-danger" })
-                </div>
-
-                <div class="form-group">
-                    @Html.LabelFor(m => m.LastName)
-                    @Html.TextBoxFor(m => m.LastName, new { @class = "form-control", required = true })
-                    @Html.ValidationMessageFor(m => m.LastName)
-                </div>
-
-                <div class="form-group">
-                    @Html.LabelFor(m => m.BirthDate)
-                    @Html.TextBoxFor(m => m.BirthDate, new { @class = "form-control datepicker", @type = "date", required = true })
-                    @Html.ValidationMessageFor(m => m.BirthDate)
-                </div>
-
-                <div class="form-group">
-                    @Html.LabelFor(m => m.Phone)
-                    @Html.TextBoxFor(m => m.Phone, new { @class = "form-control", @type = "number", required = true })
-                    <span id="error-phone" class="text-danger"></span>
-                    @Html.ValidationMessageFor(m => m.Phone)
-                </div>
-
-                <div class="form-group">
-                    @Html.LabelFor(m => m.Email)
-                    @Html.TextBoxFor(m => m.Email, new { @class = "form-control", required = true, @type = "Email" })
-                    @Html.ValidationMessageFor(m => m.Email)
-                    <span id="error-email-invalid" class="text-danger"></span>
-                </div>
-                
+            <div class="form-group">
+                <p><img id="output" width="200" /></p>
+                <input type="file" name="postedFile" accept="image/*" onchange="loadFile(event)" />
             </div>
-            <div class="tab">
-                Bank Details:
-                <div class="form-group">
-                    @Html.LabelFor(m => m.AccountNo)
-                    @Html.TextBoxFor(m => m.AccountNo, new { @class = "form-control" })
-                </div>
 
-                <div class="form-group">
-                    @Html.LabelFor(m => m.IFSC)
-                    @Html.TextBoxFor(m => m.IFSC, new { @class = "form-control" })
-                </div>
-
-                <div class="form-group">
-                    @Html.LabelFor(m => m.PanCardNo)
-                    @Html.TextBoxFor(m => m.PanCardNo, new { @class = "form-control" })
-                </div>
-
-                <div class="form-group">
-                    @Html.LabelFor(m => m.AadharCardNo)
-                    @Html.TextBoxFor(m => m.AadharCardNo, new { @class = "form-control" })
-                </div>
-
+            <div class="form-group">
+                @Html.LabelFor(m => m.FirstName)
+                @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control", required = true })
+                @Html.ValidationMessageFor(m => m.FirstName, "", new { @class = "text-danger" })
             </div>
-            <div class="tab">
-                Professional Details:
 
-                <div class="form-group">
-                    <input type="file" name="postedResumeFile" />
-                </div>
-
-                <div class="form-group">
-                    @Html.LabelFor(m => m.Years)
-                    @Html.TextBoxFor(m => m.Years, new { @class = "form-control" })
-                </div>
-
-                <div class="form-group">
-                    @Html.LabelFor(m => m.Months)
-                    @Html.TextBoxFor(m => m.Months, new { @class = "form-control" })
-                </div>
-
+            <div class="form-group">
+                @Html.LabelFor(m => m.LastName)
+                @Html.TextBoxFor(m => m.LastName, new { @class = "form-control", required = true })
+                @Html.ValidationMessageFor(m => m.LastName)
             </div>
-            <div class="tab">
-                Login Info:
 
-                <div class="form-group">
-                    @Html.LabelFor(m => m.LastName)
-                    @Html.TextBoxFor(m => m.LastName, new { @class = "form-control", required = true })
-                    @Html.ValidationMessageFor(m => m.LastName)
-                </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.BirthDate)
+                @Html.TextBoxFor(m => m.BirthDate, new { @class = "form-control datepicker", @type = "date", required = true })
+                @Html.ValidationMessageFor(m => m.BirthDate)
+            </div>
 
+            <div class="form-group">
+                @Html.LabelFor(m => m.Phone)
+                @Html.TextBoxFor(m => m.Phone, new { @class = "form-control", @type = "number", required = true })
+                <span id="error-phone" class="text-danger"></span>
+                @Html.ValidationMessageFor(m => m.Phone)
             </div>
-            <div style="overflow:auto;">
-                <div style="float:right;">
-                    <button type="button" id="prevBtn" onclick="nextPrev(-1)">Previous</button>
-                    <button type="button" id="nextBtn" onclick="nextPrev(1)">Next</button>
-                </div>
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.Email)
+                @Html.TextBoxFor(m => m.Email, new { @class = "form-control", required = true, @type = "Email" })
+                @Html.ValidationMessageFor(m => m.Email)
+                <span id="error-email-invalid" class="text-danger"></span>
             </div>
-            <!-- Circles which indicates the steps of the form: -->
-            <div style="text-align:center;margin-top:40px;">
-                <span class="step"></span>
-                <span class="step"></span>
-                <span class="step"></span>
-                <span class="step"></span>
+
+        </div>
+        <div class="tab">
+            Bank Details:
+            <div class="form-group">
+                @Html.LabelFor(m => m.AccountNo)
+                @Html.TextBoxFor(m => m.AccountNo, new { @class = "form-control" })
             </div>
-</form>
-    </body>
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.IFSC)
+                @Html.TextBoxFor(m => m.IFSC, new { @class = "form-control" })
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.PanCardNo)
+                @Html.TextBoxFor(m => m.PanCardNo, new { @class = "form-control" })
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.AadharCardNo)
+                @Html.TextBoxFor(m => m.AadharCardNo, new { @class = "form-control" })
+            </div>
+
+        </div>
+        <div class="tab">
+            Professional Details:
+
+            <div class="form-group">
+                <input type="file" name="postedResumeFile" />
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.Year)
+                @Html.TextBoxFor(m => m.Year, new { @class = "form-control" })
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.Month)
+                @Html.TextBoxFor(m => m.Month, new { @class = "form-control" })
+            </div>
+
+            <div class="form-group">
+                <label>Skills</label> <br>             
+                @Html.DropDownListFor(x => x.SkillIds, new SelectList(ViewBag.LstSkills, "Id", "Name"), new { @class = "js-example-basic-multiple form-control", multiple = "multiple" })
+            </div>
+
+        </div>
+        <div class="tab">
+            Current Status:
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.Company)
+                @Html.TextBoxFor(m => m.Company, new { @class = "form-control" , @Value = "Albiorix Technology Private Limited" , @readonly = "readonly" })
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.Designation)
+                @Html.TextBoxFor(m => m.Designation, new { @class = "form-control" })
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.Department)
+                @Html.TextBoxFor(m => m.Department, new { @class = "form-control" })
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.CTC)
+                @Html.TextBoxFor(m => m.CTC, new { @class = "form-control" })
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.WorkingFrom)
+                @Html.TextBoxFor(m => m.WorkingFrom, new { @class = "form-control" , @type = "date" })
+            </div>
+
+        </div>
+        <div style="overflow:auto;">
+            <div style="float:right;">
+                <button type="button" id="prevBtn" onclick="nextPrev(-1)">Previous</button>
+                <button type="button" id="nextBtn" onclick="nextPrev(1)">Next</button>
+            </div>
+        </div>
+        <!-- Circles which indicates the steps of the form: -->
+        <div style="text-align:center;margin-top:40px;">
+            <span class="step"></span>
+            <span class="step"></span>
+            <span class="step"></span>
+            <span class="step"></span>
+        </div>
+    </form>
+</body>
 
 <script>
+
+    $("#SkillIds").select2({
+        width: "200"
+    });
 
     var loadFile = function (event) {
         var image = document.getElementById('output');
@@ -243,7 +274,7 @@
         if (currentTab >= x.length) {
             // ... the form gets submitted:
             $('#teamDetailForm').submit();
-       
+
             return false;
         }
         // Otherwise, display the correct tab:

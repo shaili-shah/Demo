@@ -13,6 +13,19 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
+    <EntitySetMapping Name="CurrentStatus">
+      <EntityTypeMapping TypeName="DemoModel.CurrentStatu">
+        <MappingFragment StoreEntitySet="CurrentStatus">
+          <ScalarProperty Name="DetailId" ColumnName="DetailId" />
+          <ScalarProperty Name="WorkingFrom" ColumnName="WorkingFrom" />
+          <ScalarProperty Name="CTC" ColumnName="CTC" />
+          <ScalarProperty Name="Department" ColumnName="Department" />
+          <ScalarProperty Name="Designation" ColumnName="Designation" />
+          <ScalarProperty Name="Company" ColumnName="Company" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
     <EntitySetMapping Name="Details">
       <EntityTypeMapping TypeName="DemoModel.Detail">
         <MappingFragment StoreEntitySet="Details">
@@ -31,6 +44,26 @@
         <MappingFragment StoreEntitySet="File">
           <ScalarProperty Name="Data" ColumnName="Data" />
           <ScalarProperty Name="ContentType" ColumnName="ContentType" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ProfessionalDetails">
+      <EntityTypeMapping TypeName="DemoModel.ProfessionalDetail">
+        <MappingFragment StoreEntitySet="ProfessionalDetail">
+          <ScalarProperty Name="FileId" ColumnName="FileId" />
+          <ScalarProperty Name="DetailId" ColumnName="DetailId" />
+          <ScalarProperty Name="SkillIds" ColumnName="SkillIds" />
+          <ScalarProperty Name="Month" ColumnName="Month" />
+          <ScalarProperty Name="Year" ColumnName="Year" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Skills">
+      <EntityTypeMapping TypeName="DemoModel.Skill">
+        <MappingFragment StoreEntitySet="Skill">
           <ScalarProperty Name="Name" ColumnName="Name" />
           <ScalarProperty Name="Id" ColumnName="Id" />
         </MappingFragment>

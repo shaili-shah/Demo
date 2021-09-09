@@ -11,6 +11,18 @@
     <Property Name="AadharCardNo" Type="nvarchar" MaxLength="50" Nullable="false" />
     <Property Name="DetailId" Type="int" Nullable="false" />
   </EntityType>
+  <EntityType Name="CurrentStatus">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Company" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Designation" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Department" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="CTC" Type="nvarchar" MaxLength="50" />
+    <Property Name="WorkingFrom" Type="datetime" Nullable="false" />
+    <Property Name="DetailId" Type="int" Nullable="false" />
+  </EntityType>
   <EntityType Name="Details">
     <Key>
       <PropertyRef Name="Id" />
@@ -32,6 +44,24 @@
     <Property Name="ContentType" Type="nvarchar" MaxLength="200" />
     <Property Name="Data" Type="varbinary(max)" />
   </EntityType>
+  <EntityType Name="ProfessionalDetail">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Year" Type="int" />
+    <Property Name="Month" Type="int" />
+    <Property Name="SkillIds" Type="nvarchar" MaxLength="50" />
+    <Property Name="DetailId" Type="int" Nullable="false" />
+    <Property Name="FileId" Type="int" />
+  </EntityType>
+  <EntityType Name="Skill">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+  </EntityType>
   <Association Name="FK_BankDetails_Details">
     <End Role="Details" Type="Self.Details" Multiplicity="1" />
     <End Role="BankDetails" Type="Self.BankDetails" Multiplicity="*" />
@@ -40,6 +70,18 @@
         <PropertyRef Name="Id" />
       </Principal>
       <Dependent Role="BankDetails">
+        <PropertyRef Name="DetailId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_CurrentStatus_Details">
+    <End Role="Details" Type="Self.Details" Multiplicity="1" />
+    <End Role="CurrentStatus" Type="Self.CurrentStatus" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Details">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="CurrentStatus">
         <PropertyRef Name="DetailId" />
       </Dependent>
     </ReferentialConstraint>
@@ -56,17 +98,56 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Association Name="FK_ProfessionalDetail_Details">
+    <End Role="Details" Type="Self.Details" Multiplicity="1" />
+    <End Role="ProfessionalDetail" Type="Self.ProfessionalDetail" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Details">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="ProfessionalDetail">
+        <PropertyRef Name="DetailId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ProfessionalDetail_File">
+    <End Role="File" Type="Self.File" Multiplicity="0..1" />
+    <End Role="ProfessionalDetail" Type="Self.ProfessionalDetail" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="File">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="ProfessionalDetail">
+        <PropertyRef Name="FileId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
   <EntityContainer Name="DemoModelStoreContainer">
     <EntitySet Name="BankDetails" EntityType="Self.BankDetails" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="CurrentStatus" EntityType="Self.CurrentStatus" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Details" EntityType="Self.Details" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="File" EntityType="Self.File" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="ProfessionalDetail" EntityType="Self.ProfessionalDetail" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Skill" EntityType="Self.Skill" Schema="dbo" store:Type="Tables" />
     <AssociationSet Name="FK_BankDetails_Details" Association="Self.FK_BankDetails_Details">
       <End Role="Details" EntitySet="Details" />
       <End Role="BankDetails" EntitySet="BankDetails" />
     </AssociationSet>
+    <AssociationSet Name="FK_CurrentStatus_Details" Association="Self.FK_CurrentStatus_Details">
+      <End Role="Details" EntitySet="Details" />
+      <End Role="CurrentStatus" EntitySet="CurrentStatus" />
+    </AssociationSet>
     <AssociationSet Name="FK_Details_File" Association="Self.FK_Details_File">
       <End Role="File" EntitySet="File" />
       <End Role="Details" EntitySet="Details" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ProfessionalDetail_Details" Association="Self.FK_ProfessionalDetail_Details">
+      <End Role="Details" EntitySet="Details" />
+      <End Role="ProfessionalDetail" EntitySet="ProfessionalDetail" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ProfessionalDetail_File" Association="Self.FK_ProfessionalDetail_File">
+      <End Role="File" EntitySet="File" />
+      <End Role="ProfessionalDetail" EntitySet="ProfessionalDetail" />
     </AssociationSet>
   </EntityContainer>
 </Schema>
