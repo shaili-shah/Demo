@@ -14,7 +14,7 @@ namespace Demo.Controllers
 
         private IDetail Ide;
 
-       
+
 
         public DetailController()
         {
@@ -30,7 +30,7 @@ namespace Demo.Controllers
             {
                 model = new TeamModel();
                 model.Name = item.FirstName + " " + item.LastName;
-                if(item.CurrentStatus.Count > 0)
+                if (item.CurrentStatus.Count > 0)
                 {
                     model.Department = item.CurrentStatus.FirstOrDefault().Department;
                     model.Designation = item.CurrentStatus.FirstOrDefault().Designation;
@@ -48,11 +48,11 @@ namespace Demo.Controllers
             return View();
         }
 
-       [HttpPost]
-        public ActionResult TeamDetail(TeamDetailModel model, HttpPostedFileBase postedFile , HttpPostedFileBase postedResumeFile)
+        [HttpPost]
+        public ActionResult TeamDetail(TeamDetailModel model, HttpPostedFileBase postedFile, HttpPostedFileBase postedResumeFile)
         {
-            //if (ModelState.IsValid)
-            //{
+            if (ModelState.IsValid)
+            {
                 byte[] bytes;
 
                 byte[] rbytes;
@@ -73,39 +73,53 @@ namespace Demo.Controllers
                     model.FileModel = fileModel;
                 }
 
-            if (postedResumeFile != null)
-            {
-                using (BinaryReader br = new BinaryReader(postedResumeFile.InputStream))
+                if (postedResumeFile != null)
                 {
-                    rbytes = br.ReadBytes(postedResumeFile.ContentLength);
+                    using (BinaryReader br = new BinaryReader(postedResumeFile.InputStream))
+                    {
+                        rbytes = br.ReadBytes(postedResumeFile.ContentLength);
+                    }
+
+                    FileModel fileModel = new FileModel
+                    {
+                        Name = Path.GetFileName(postedResumeFile.FileName),
+                        ContentType = postedResumeFile.ContentType,
+                        Data = rbytes
+                    };
+                    model.ResumeFileModel = fileModel;
                 }
 
-                FileModel fileModel = new FileModel
+                if (model != null && model.LstExprienceDetailModel != null && model.LstExprienceDetailModel.Any())
                 {
-                    Name = Path.GetFileName(postedResumeFile.FileName),
-                    ContentType = postedResumeFile.ContentType,
-                    Data = rbytes
-                };
-                model.ResumeFileModel = fileModel;
-            }
+                    model.LstExprienceDetailModel = model.LstExprienceDetailModel.Where(x => x.Company != null).ToList();
+                }
+                if (model != null && model.LstEducationDetailModel != null && model.LstEducationDetailModel.Any())
+                {
+                    model.LstEducationDetailModel = model.LstEducationDetailModel.Where(x => x.Course != null).ToList();
+                }
+                Ide.AddTeamDetail(model);
 
-            if(model != null && model.LstExprienceDetailModel != null && model.LstExprienceDetailModel.Any()) 
+                return RedirectToAction("Index");
+            }
+            else
             {
-                model.LstExprienceDetailModel = model.LstExprienceDetailModel.Where(x => x.Company != null).ToList();
+                IEnumerable<ModelError> allErrors = ModelState.Values.SelectMany(v => v.Errors);
+                var skills = Ide.GetAllSkills();
+                ViewBag.LstSkills = skills;
+                return View(model);
             }
-
-
-            Ide.AddTeamDetail(model);
-
-
-            //}
-            return RedirectToAction("Index");
         }
 
         public ActionResult NewExprienceDetailRow(int id)
         {
             var model = new ExprienceDetailModel { Id = id };
             return View("_NewExprienceDetailRow", model);
+        }
+
+        public ActionResult NewEducationDetailRow(int id)
+        {
+            var model = new EducationDetailModel { Id = id };
+            return View("_NewEducationDetailRow", model);
         }
 
         public ActionResult Detail(int? activeTab)
@@ -144,12 +158,12 @@ namespace Demo.Controllers
                 }
 
                 Ide.AddPersonalDetail(model);
-               
-            
-                return RedirectToAction("Detail",  new { activeTab = (int)TabEnum.BankDetails });
+
+
+                return RedirectToAction("Detail", new { activeTab = (int)TabEnum.BankDetails });
             }
-                      
-            return RedirectToAction("Detail", new { activeTab = (int)TabEnum.PersonalDetails });           
+
+            return RedirectToAction("Detail", new { activeTab = (int)TabEnum.PersonalDetails });
         }
 
         public ActionResult BankDetails()

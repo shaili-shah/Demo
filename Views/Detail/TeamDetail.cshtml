@@ -104,11 +104,11 @@
 
             <div class="form-group">
                 <p><img id="output" width="200" /></p>
-                <input type="file" name="postedFile" accept="image/*" onchange="loadFile(event)" />
+                <input type="file" name="postedFile" accept="image/*" onchange="ValidateSingleInput(this);" />
             </div>
 
             <div class="form-group">
-                @Html.LabelFor(m => m.FirstName)
+                @Html.LabelFor(m => m.FirstName)                
                 @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control", required = true })
                 @Html.ValidationMessageFor(m => m.FirstName, "", new { @class = "text-danger" })
             </div>
@@ -116,26 +116,26 @@
             <div class="form-group">
                 @Html.LabelFor(m => m.LastName)
                 @Html.TextBoxFor(m => m.LastName, new { @class = "form-control", required = true })
-                @Html.ValidationMessageFor(m => m.LastName)
+                @Html.ValidationMessageFor(m => m.LastName, "", new { @class = "text-danger" })
             </div>
 
             <div class="form-group">
                 @Html.LabelFor(m => m.BirthDate)
                 @Html.TextBoxFor(m => m.BirthDate, new { @class = "form-control datepicker", @type = "date", required = true })
-                @Html.ValidationMessageFor(m => m.BirthDate)
+                @Html.ValidationMessageFor(m => m.BirthDate, "", new { @class = "text-danger" })
             </div>
 
             <div class="form-group">
                 @Html.LabelFor(m => m.Phone)
-                @Html.TextBoxFor(m => m.Phone, new { @class = "form-control", @type = "number", required = true })
+                @Html.TextBoxFor(m => m.Phone, new { @class = "form-control", @type = "number", required = true , min = 0  })
                 <span id="error-phone" class="text-danger"></span>
-                @Html.ValidationMessageFor(m => m.Phone)
+                @Html.ValidationMessageFor(m => m.Phone , "", new { @class = "text-danger" })
             </div>
 
             <div class="form-group">
                 @Html.LabelFor(m => m.Email)
                 @Html.TextBoxFor(m => m.Email, new { @class = "form-control", required = true, @type = "Email" })
-                @Html.ValidationMessageFor(m => m.Email)
+                @Html.ValidationMessageFor(m => m.Email , "", new { @class = "text-danger" })
                 <span id="error-email-invalid" class="text-danger"></span>
             </div>
 
@@ -145,21 +145,25 @@
             <div class="form-group">
                 @Html.LabelFor(m => m.AccountNo)
                 @Html.TextBoxFor(m => m.AccountNo, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.AccountNo, "", new { @class = "text-danger" })
             </div>
 
             <div class="form-group">
                 @Html.LabelFor(m => m.IFSC)
                 @Html.TextBoxFor(m => m.IFSC, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.IFSC, "", new { @class = "text-danger" })
             </div>
 
             <div class="form-group">
                 @Html.LabelFor(m => m.PanCardNo)
                 @Html.TextBoxFor(m => m.PanCardNo, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.PanCardNo, "", new { @class = "text-danger" })
             </div>
 
             <div class="form-group">
                 @Html.LabelFor(m => m.AadharCardNo)
                 @Html.TextBoxFor(m => m.AadharCardNo, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.AadharCardNo, "", new { @class = "text-danger" })
             </div>
 
         </div>
@@ -181,7 +185,7 @@
             </div>
 
             <div class="form-group">
-                <label>Skills</label> <br>             
+                <label>Skills</label> <br>
                 @Html.DropDownListFor(x => x.SkillIds, new SelectList(ViewBag.LstSkills, "Id", "Name"), new { @class = "js-example-basic-multiple form-control", multiple = "multiple" })
             </div>
 
@@ -191,17 +195,20 @@
 
             <div class="form-group">
                 @Html.LabelFor(m => m.Company)
-                @Html.TextBoxFor(m => m.Company, new { @class = "form-control" , @Value = "Albiorix Technology Private Limited" , @readonly = "readonly" })
+                @Html.TextBoxFor(m => m.Company, new { @class = "form-control", @Value = "Albiorix Technology Private Limited", @readonly = "readonly" })
+                @Html.ValidationMessageFor(m => m.Company, "", new { @class = "text-danger" })
             </div>
 
             <div class="form-group">
                 @Html.LabelFor(m => m.Designation)
                 @Html.TextBoxFor(m => m.Designation, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.Designation, "", new { @class = "text-danger" })
             </div>
 
             <div class="form-group">
                 @Html.LabelFor(m => m.Department)
                 @Html.TextBoxFor(m => m.Department, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.Department, "", new { @class = "text-danger" })
             </div>
 
             <div class="form-group">
@@ -211,7 +218,8 @@
 
             <div class="form-group">
                 @Html.LabelFor(m => m.WorkingFrom)
-                @Html.TextBoxFor(m => m.WorkingFrom, new { @class = "form-control" , @type = "date" })
+                @Html.TextBoxFor(m => m.WorkingFrom, new { @class = "form-control", @type = "date" })
+                @Html.ValidationMessageFor(m => m.WorkingFrom, "", new { @class = "text-danger" })
             </div>
 
         </div>
@@ -224,6 +232,13 @@
 
         </div>
 
+        <div class="tab">
+
+            <input type="button" id="btnAddEducation" value="Add New Education" class="btn btn-primary set-btn" />
+
+            <div id="container-education"> </div>
+
+        </div>
 
         <div style="overflow:auto;">
             <div style="float:right;">
@@ -238,11 +253,35 @@
             <span class="step"></span>
             <span class="step"></span>
             <span class="step"></span>
+            <span class="step"></span>
         </div>
     </form>
 </body>
 
 <script>
+
+    var now = new Date(),
+    currentDate = now.toISOString().substring(0, 10);
+    $('#BirthDate').prop('max', currentDate);
+    $('#WorkingFrom').prop('max', currentDate);
+
+    var number = document.getElementById('Phone');
+    number.onkeydown = function (e) {
+        if (!((e.keyCode > 95 && e.keyCode < 106)
+            || (e.keyCode > 47 && e.keyCode < 58)
+            || e.keyCode == 8)) {
+            return false;
+        }
+    }
+
+    $("#Phone").on('change', function () {
+        if ($("#Phone").val().length != 10) {
+            $("#error-phone").text("Invalid");
+        } else {
+            $("#error-phone").text("");
+        }
+    });
+
 
     $("#SkillIds").select2({
         width: "200"
@@ -250,12 +289,24 @@
 
     $(function () {
         $("#btnAdd").click(function (e) {
-           
+
         var itemIndex = $("#container input.iHidden").length;
             e.preventDefault();
 
         $.get("@Url.Action("NewExprienceDetailRow", "Detail")/"+itemIndex,function(data){
             $("#container").append(data);
+        });
+    });
+    });
+
+     $(function () {
+         $("#btnAddEducation").click(function (e) {
+
+            var itemIndex = $("#container-education input.iHidden").length;
+            e.preventDefault();
+
+        $.get("@Url.Action("NewEducationDetailRow", "Detail")/"+itemIndex,function(data){
+            $("#container-education").append(data);
         });
     });
   });
@@ -264,11 +315,34 @@
         $(this).closest('div.table-bordered').remove();
     });
 
+    var _validFileExtensions = [".jpg", ".jpeg", ".png"];
+    function ValidateSingleInput(oInput) {
+        if (oInput.type == "file") {
+            var sFileName = oInput.value;
+            if (sFileName.length > 0) {
+                var blnValid = false;
+                for (var j = 0; j < _validFileExtensions.length; j++) {
+                    var sCurExtension = _validFileExtensions[j];
+                    if (sFileName.substr(sFileName.length - sCurExtension.length, sCurExtension.length).toLowerCase() == sCurExtension.toLowerCase()) {
+                        blnValid = true;
+                        break;
+                    }
+                }
 
-    var loadFile = function (event) {
-        var image = document.getElementById('output');
-        image.src = URL.createObjectURL(event.target.files[0]);
-    };
+                if (!blnValid) {
+                    alert(" File is invalid");
+                    oInput.value = "";
+                    return false;
+                }
+
+                // load file
+                var image = document.getElementById('output');
+                image.src = URL.createObjectURL(event.target.files[0]);
+            }
+        }
+
+        return true;
+    }
 
     var currentTab = 0; // Current tab is set to be the first tab (0)
     showTab(currentTab); // Display the current tab
@@ -298,7 +372,7 @@
         // Exit the function if any field in the current tab is invalid:
 
 
-        //if (n == 1 && !validateForm()) return false;
+       // if (n == 1 && !validateForm()) return false;
 
 
         // Hide the current tab:
@@ -306,7 +380,7 @@
         // Increase or decrease the current tab by 1:
         currentTab = currentTab + n;
         // if you have reached the end of the form...
-        if (currentTab >= x.length) {            
+        if (currentTab >= x.length) {
             // ... the form gets submitted:
             $('#teamDetailForm').submit();
 

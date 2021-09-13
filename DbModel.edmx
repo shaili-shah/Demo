@@ -40,6 +40,17 @@
           <Property Name="Email" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="FileId" Type="int" />
         </EntityType>
+        <EntityType Name="EducationDetails">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Course" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="University" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="PassedOn" Type="datetime" />
+          <Property Name="Grade" Type="nvarchar" MaxLength="10" />
+          <Property Name="DetailId" Type="int" Nullable="false" />
+        </EntityType>
         <EntityType Name="ExprienceDetail">
           <Key>
             <PropertyRef Name="Id" />
@@ -116,6 +127,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_EducationDetails_Details">
+          <End Role="Details" Type="Self.Details" Multiplicity="1" />
+          <End Role="EducationDetails" Type="Self.EducationDetails" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Details">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="EducationDetails">
+              <PropertyRef Name="DetailId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_ExprienceDetail_Details">
           <End Role="Details" Type="Self.Details" Multiplicity="1" />
           <End Role="ExprienceDetail" Type="Self.ExprienceDetail" Multiplicity="*" />
@@ -156,6 +179,7 @@
           <EntitySet Name="BankDetails" EntityType="Self.BankDetails" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CurrentStatus" EntityType="Self.CurrentStatus" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Details" EntityType="Self.Details" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="EducationDetails" EntityType="Self.EducationDetails" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ExprienceDetail" EntityType="Self.ExprienceDetail" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="File" EntityType="Self.File" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ProfessionalDetail" EntityType="Self.ProfessionalDetail" Schema="dbo" store:Type="Tables" />
@@ -171,6 +195,10 @@
           <AssociationSet Name="FK_Details_File" Association="Self.FK_Details_File">
             <End Role="File" EntitySet="File" />
             <End Role="Details" EntitySet="Details" />
+          </AssociationSet>
+          <AssociationSet Name="FK_EducationDetails_Details" Association="Self.FK_EducationDetails_Details">
+            <End Role="Details" EntitySet="Details" />
+            <End Role="EducationDetails" EntitySet="EducationDetails" />
           </AssociationSet>
           <AssociationSet Name="FK_ExprienceDetail_Details" Association="Self.FK_ExprienceDetail_Details">
             <End Role="Details" EntitySet="Details" />
@@ -193,6 +221,7 @@
           <EntitySet Name="BankDetails" EntityType="DemoModel.BankDetail" />
           <EntitySet Name="CurrentStatus" EntityType="DemoModel.CurrentStatu" />
           <EntitySet Name="Details" EntityType="DemoModel.Detail" />
+          <EntitySet Name="EducationDetails" EntityType="DemoModel.EducationDetail" />
           <EntitySet Name="ExprienceDetails" EntityType="DemoModel.ExprienceDetail" />
           <EntitySet Name="Files" EntityType="DemoModel.File" />
           <EntitySet Name="ProfessionalDetails" EntityType="DemoModel.ProfessionalDetail" />
@@ -208,6 +237,10 @@
           <AssociationSet Name="FK_Details_File" Association="DemoModel.FK_Details_File">
             <End Role="File" EntitySet="Files" />
             <End Role="Detail" EntitySet="Details" />
+          </AssociationSet>
+          <AssociationSet Name="FK_EducationDetails_Details" Association="DemoModel.FK_EducationDetails_Details">
+            <End Role="Detail" EntitySet="Details" />
+            <End Role="EducationDetail" EntitySet="EducationDetails" />
           </AssociationSet>
           <AssociationSet Name="FK_ExprienceDetail_Details" Association="DemoModel.FK_ExprienceDetail_Details">
             <End Role="Detail" EntitySet="Details" />
@@ -261,8 +294,21 @@
           <NavigationProperty Name="BankDetails" Relationship="DemoModel.FK_BankDetails_Details" FromRole="Detail" ToRole="BankDetail" />
           <NavigationProperty Name="CurrentStatus" Relationship="DemoModel.FK_CurrentStatus_Details" FromRole="Detail" ToRole="CurrentStatu" />
           <NavigationProperty Name="File" Relationship="DemoModel.FK_Details_File" FromRole="Detail" ToRole="File" />
+          <NavigationProperty Name="EducationDetails" Relationship="DemoModel.FK_EducationDetails_Details" FromRole="Detail" ToRole="EducationDetail" />
           <NavigationProperty Name="ExprienceDetails" Relationship="DemoModel.FK_ExprienceDetail_Details" FromRole="Detail" ToRole="ExprienceDetail" />
           <NavigationProperty Name="ProfessionalDetails" Relationship="DemoModel.FK_ProfessionalDetail_Details" FromRole="Detail" ToRole="ProfessionalDetail" />
+        </EntityType>
+        <EntityType Name="EducationDetail">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Course" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="University" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="PassedOn" Type="DateTime" Precision="3" />
+          <Property Name="Grade" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="DetailId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Detail" Relationship="DemoModel.FK_EducationDetails_Details" FromRole="EducationDetail" ToRole="Detail" />
         </EntityType>
         <EntityType Name="ExprienceDetail">
           <Key>
@@ -345,6 +391,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_EducationDetails_Details">
+          <End Type="DemoModel.Detail" Role="Detail" Multiplicity="1" />
+          <End Type="DemoModel.EducationDetail" Role="EducationDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Detail">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="EducationDetail">
+              <PropertyRef Name="DetailId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_ExprienceDetail_Details">
           <End Type="DemoModel.Detail" Role="Detail" Multiplicity="1" />
           <End Type="DemoModel.ExprienceDetail" Role="ExprienceDetail" Multiplicity="*" />
@@ -421,6 +479,18 @@
                 <ScalarProperty Name="BirthDate" ColumnName="BirthDate" />
                 <ScalarProperty Name="LastName" ColumnName="LastName" />
                 <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EducationDetails">
+            <EntityTypeMapping TypeName="DemoModel.EducationDetail">
+              <MappingFragment StoreEntitySet="EducationDetails">
+                <ScalarProperty Name="DetailId" ColumnName="DetailId" />
+                <ScalarProperty Name="Grade" ColumnName="Grade" />
+                <ScalarProperty Name="PassedOn" ColumnName="PassedOn" />
+                <ScalarProperty Name="University" ColumnName="University" />
+                <ScalarProperty Name="Course" ColumnName="Course" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>

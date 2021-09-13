@@ -158,6 +158,9 @@
     <Compile Include="Detail.cs">
       <DependentUpon>DbModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="EducationDetail.cs">
+      <DependentUpon>DbModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="ExprienceDetail.cs">
       <DependentUpon>DbModel.tt</DependentUpon>
     </Compile>
@@ -169,6 +172,7 @@
     </Compile>
     <Compile Include="Models\BankDetailModel.cs" />
     <Compile Include="Models\CurrentStatusModel.cs" />
+    <Compile Include="Models\EducationDetailModel.cs" />
     <Compile Include="Models\ExprienceDetailModel.cs" />
     <Compile Include="Models\FileModel.cs" />
     <Compile Include="Models\PersonalDetailModel.cs" />
@@ -245,6 +249,7 @@
     <Content Include="Views\Detail\BankDetails.cshtml" />
     <Content Include="Views\Detail\TeamDetail.cshtml" />
     <Content Include="Views\Detail\_NewExprienceDetailRow.cshtml" />
+    <Content Include="Views\Detail\_NewEducationDetailRow.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -10,9 +10,10 @@ namespace Demo.Models
         {
             SkillIds = new List<int>();
             LstExprienceDetailModel = new List<ExprienceDetailModel>();
+            LstEducationDetailModel = new List<EducationDetailModel>();
         }
        
-        public int Id { get; set; }
+        public int? Id { get; set; }
 
         [Required]
         public string FirstName { get; set; }
@@ -23,8 +24,11 @@ namespace Demo.Models
         [Required]
         public DateTime BirthDate { get; set; }
 
+        [Required]
         public string Phone { get; set; }
 
+        [Required]
+        [EmailAddress(ErrorMessage = "Invalid Email Address")]
         public string Email { get; set; }
 
         public int? FileId { get; set; }
@@ -33,18 +37,22 @@ namespace Demo.Models
 
         // bank detail        
 
+        [Required]
         public string IFSC { get; set; }
 
+        [Required]
         public string AccountNo { get; set; }
         
+        [Required]
         public string PanCardNo { get; set; }
         
+        [Required]
         public string AadharCardNo { get; set; }
 
         // professional detail
-        public int Year { get; set; }
+        public int? Year { get; set; }
 
-        public int Month { get; set; }
+        public int? Month { get; set; }
 
         public List<int> SkillIds { get; set; }
 
@@ -53,18 +61,26 @@ namespace Demo.Models
         public FileModel ResumeFileModel { get; set; }
 
         // current status
+        
+        [Required]
         public string Company { get; set; }
 
+        [Required]
         public string Designation { get; set; }
 
+        [Required]
         public string Department { get; set; }
 
         public string CTC { get; set; }
 
+        [Required]
         public DateTime WorkingFrom { get; set; }
 
         // exprience detail
         public List<ExprienceDetailModel> LstExprienceDetailModel { get; set; }
+
+        // education detail
+        public List<EducationDetailModel> LstEducationDetailModel { get; set; }
 
     }
 }

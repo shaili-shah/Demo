@@ -19,6 +19,7 @@ namespace Demo
         {
             this.BankDetails = new HashSet<BankDetail>();
             this.CurrentStatus = new HashSet<CurrentStatu>();
+            this.EducationDetails = new HashSet<EducationDetail>();
             this.ExprienceDetails = new HashSet<ExprienceDetail>();
             this.ProfessionalDetails = new HashSet<ProfessionalDetail>();
         }
@@ -36,6 +37,8 @@ namespace Demo
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<CurrentStatu> CurrentStatus { get; set; }
         public virtual File File { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<EducationDetail> EducationDetails { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ExprienceDetail> ExprienceDetails { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

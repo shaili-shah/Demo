@@ -64,6 +64,11 @@ namespace Demo.Repository
             _context.ExprienceDetails.AddRange(lstExprienceDetails);
         }
 
+        public void InsertRangeEducationDetail(List<EducationDetail> lstEducationDetails)
+        {
+            _context.EducationDetails.AddRange(lstEducationDetails);
+        }
+
         public void Save()
         {
             _context.SaveChanges();
@@ -116,6 +121,12 @@ namespace Demo.Repository
             model.LstExprienceDetailModel.ToList().ForEach(s => s.DetailId = detail.Id);
             lstExprienceDetailModel = model.LstExprienceDetailModel;
             AddExpriencesDetail(lstExprienceDetailModel);
+
+            // education detail
+            List<EducationDetailModel> lstEducationDetailModel = new List<EducationDetailModel>();
+            model.LstEducationDetailModel.ToList().ForEach(s => s.DetailId = detail.Id);
+            lstEducationDetailModel = model.LstEducationDetailModel;
+            AddEducationDetail(lstEducationDetailModel);
 
             return true;
         }
@@ -212,6 +223,21 @@ namespace Demo.Repository
             var data = mapper.Map<List<ExprienceDetailModel>, List<ExprienceDetail>>(lstmodel);
 
             InsertRangeExprienceDetail(data);
+            Save();
+
+            return true;
+        }
+
+        public bool AddEducationDetail(List<EducationDetailModel> lstmodel)
+        {
+            var config = new MapperConfiguration(cfg => {
+                cfg.CreateMap<EducationDetailModel, EducationDetail>();
+            });
+
+            IMapper mapper = config.CreateMapper();
+            var data = mapper.Map<List<EducationDetailModel>, List<EducationDetail>>(lstmodel);
+
+            InsertRangeEducationDetail(data);
             Save();
 
             return true;

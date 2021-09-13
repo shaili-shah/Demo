@@ -35,6 +35,17 @@
     <Property Name="Email" Type="nvarchar" MaxLength="50" Nullable="false" />
     <Property Name="FileId" Type="int" />
   </EntityType>
+  <EntityType Name="EducationDetails">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Course" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="University" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="PassedOn" Type="datetime" />
+    <Property Name="Grade" Type="nvarchar" MaxLength="10" />
+    <Property Name="DetailId" Type="int" Nullable="false" />
+  </EntityType>
   <EntityType Name="ExprienceDetail">
     <Key>
       <PropertyRef Name="Id" />
@@ -111,6 +122,18 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Association Name="FK_EducationDetails_Details">
+    <End Role="Details" Type="Self.Details" Multiplicity="1" />
+    <End Role="EducationDetails" Type="Self.EducationDetails" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Details">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="EducationDetails">
+        <PropertyRef Name="DetailId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
   <Association Name="FK_ExprienceDetail_Details">
     <End Role="Details" Type="Self.Details" Multiplicity="1" />
     <End Role="ExprienceDetail" Type="Self.ExprienceDetail" Multiplicity="*" />
@@ -151,6 +174,7 @@
     <EntitySet Name="BankDetails" EntityType="Self.BankDetails" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="CurrentStatus" EntityType="Self.CurrentStatus" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Details" EntityType="Self.Details" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="EducationDetails" EntityType="Self.EducationDetails" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="ExprienceDetail" EntityType="Self.ExprienceDetail" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="File" EntityType="Self.File" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="ProfessionalDetail" EntityType="Self.ProfessionalDetail" Schema="dbo" store:Type="Tables" />
@@ -166,6 +190,10 @@
     <AssociationSet Name="FK_Details_File" Association="Self.FK_Details_File">
       <End Role="File" EntitySet="File" />
       <End Role="Details" EntitySet="Details" />
+    </AssociationSet>
+    <AssociationSet Name="FK_EducationDetails_Details" Association="Self.FK_EducationDetails_Details">
+      <End Role="Details" EntitySet="Details" />
+      <End Role="EducationDetails" EntitySet="EducationDetails" />
     </AssociationSet>
     <AssociationSet Name="FK_ExprienceDetail_Details" Association="Self.FK_ExprienceDetail_Details">
       <End Role="Details" EntitySet="Details" />

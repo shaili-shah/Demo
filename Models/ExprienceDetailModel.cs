@@ -4,7 +4,7 @@ namespace Demo.Models
 {
     public class ExprienceDetailModel
     {
-        public int Id { get; set; }
+        public int? Id { get; set; }
 
         public string Company { get; set; }
 

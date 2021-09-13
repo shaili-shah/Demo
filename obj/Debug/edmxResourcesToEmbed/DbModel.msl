@@ -39,6 +39,18 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
+    <EntitySetMapping Name="EducationDetails">
+      <EntityTypeMapping TypeName="DemoModel.EducationDetail">
+        <MappingFragment StoreEntitySet="EducationDetails">
+          <ScalarProperty Name="DetailId" ColumnName="DetailId" />
+          <ScalarProperty Name="Grade" ColumnName="Grade" />
+          <ScalarProperty Name="PassedOn" ColumnName="PassedOn" />
+          <ScalarProperty Name="University" ColumnName="University" />
+          <ScalarProperty Name="Course" ColumnName="Course" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
     <EntitySetMapping Name="ExprienceDetails">
       <EntityTypeMapping TypeName="DemoModel.ExprienceDetail">
         <MappingFragment StoreEntitySet="ExprienceDetail">
