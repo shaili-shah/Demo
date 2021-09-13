@@ -96,11 +96,10 @@
 
 <body>
     <form id="teamDetailForm" action="@Url.Action("TeamDetail","Detail")" enctype="multipart/form-data" method="post">
-        <h1>Details:</h1>
+        @*<h1>Details:</h1>*@
         <!-- One "tab" for each step in the form: -->
         <div class="tab">
-
-            Personal Details :
+           <h1> Personal Details :</h1>
 
             <div class="form-group">
                 <p><img id="output" width="200" /></p>
@@ -108,7 +107,7 @@
             </div>
 
             <div class="form-group">
-                @Html.LabelFor(m => m.FirstName)                
+                @Html.LabelFor(m => m.FirstName)
                 @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control", required = true })
                 @Html.ValidationMessageFor(m => m.FirstName, "", new { @class = "text-danger" })
             </div>
@@ -127,21 +126,21 @@
 
             <div class="form-group">
                 @Html.LabelFor(m => m.Phone)
-                @Html.TextBoxFor(m => m.Phone, new { @class = "form-control", @type = "number", required = true , min = 0  })
+                @Html.TextBoxFor(m => m.Phone, new { @class = "form-control", @type = "number", required = true, min = 0 })
                 <span id="error-phone" class="text-danger"></span>
-                @Html.ValidationMessageFor(m => m.Phone , "", new { @class = "text-danger" })
+                @Html.ValidationMessageFor(m => m.Phone, "", new { @class = "text-danger" })
             </div>
 
             <div class="form-group">
                 @Html.LabelFor(m => m.Email)
                 @Html.TextBoxFor(m => m.Email, new { @class = "form-control", required = true, @type = "Email" })
-                @Html.ValidationMessageFor(m => m.Email , "", new { @class = "text-danger" })
+                @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
                 <span id="error-email-invalid" class="text-danger"></span>
             </div>
 
         </div>
         <div class="tab">
-            Bank Details:
+            <h1> Bank Details :</h1>
             <div class="form-group">
                 @Html.LabelFor(m => m.AccountNo)
                 @Html.TextBoxFor(m => m.AccountNo, new { @class = "form-control" })
@@ -158,17 +157,19 @@
                 @Html.LabelFor(m => m.PanCardNo)
                 @Html.TextBoxFor(m => m.PanCardNo, new { @class = "form-control" })
                 @Html.ValidationMessageFor(m => m.PanCardNo, "", new { @class = "text-danger" })
+                <span id="error-pancard" class="text-danger"></span>
             </div>
 
             <div class="form-group">
                 @Html.LabelFor(m => m.AadharCardNo)
                 @Html.TextBoxFor(m => m.AadharCardNo, new { @class = "form-control" })
                 @Html.ValidationMessageFor(m => m.AadharCardNo, "", new { @class = "text-danger" })
+                <span id="error-aadharcard" class="text-danger"></span>
             </div>
 
         </div>
         <div class="tab">
-            Professional Details:
+            <h1> Professional Details :</h1>
 
             <div class="form-group">
                 <input type="file" name="postedResumeFile" />
@@ -191,8 +192,8 @@
 
         </div>
         <div class="tab">
-            Current Status:
-
+            <h1>  Current Status:</h1>
+           
             <div class="form-group">
                 @Html.LabelFor(m => m.Company)
                 @Html.TextBoxFor(m => m.Company, new { @class = "form-control", @Value = "Albiorix Technology Private Limited", @readonly = "readonly" })
@@ -226,6 +227,7 @@
 
         <div class="tab">
 
+            <h1> Exprience Details:</h1>
             <input type="button" id="btnAdd" value="Add New Exprience" class="btn btn-primary set-btn" />
 
             <div id="container"> </div>
@@ -233,7 +235,7 @@
         </div>
 
         <div class="tab">
-
+            <h1> Education Details:</h1>
             <input type="button" id="btnAddEducation" value="Add New Education" class="btn btn-primary set-btn" />
 
             <div id="container-education"> </div>
@@ -282,6 +284,24 @@
         }
     });
 
+    $("#PanCardNo").change(function () {
+        $("#error-pancard").text("");
+            var inputvalues = $(this).val();
+            var regex = /[A-Z]{5}[0-9]{4}[A-Z]{1}$/;
+            if (!regex.test(inputvalues)) {
+                $(".pan").val("");
+                $("#error-pancard").text("Invalid");
+                return regex.test(inputvalues);
+            }
+    });
+
+    $("#AadharCardNo").change(function () {       
+        $("#error-aadharcard").text("");
+        var regex = /(^[0-9]{4}[0-9]{4}[0-9]{4}$)|(^[0-9]{4}\s[0-9]{4}\s[0-9]{4}$)|(^[0-9]{4}-[0-9]{4}-[0-9]{4}$)/;
+        if (!regex.test($("#AadharCardNo").val())) {
+            $("#error-aadharcard").text("Invalid");
+        }
+    });
 
     $("#SkillIds").select2({
         width: "200"
@@ -366,7 +386,7 @@
         fixStepIndicator(n)
     }
 
-    function nextPrev(n) {
+    function nextPrev(n) {        
         // This function will figure out which tab to display
         var x = document.getElementsByClassName("tab");
         // Exit the function if any field in the current tab is invalid:
