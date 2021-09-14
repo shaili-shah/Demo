@@ -30,6 +30,7 @@ namespace Demo.Controllers
             {
                 model = new TeamModel();
                 model.Name = item.FirstName + " " + item.LastName;
+                model.Id = item.Id;
                 if (item.CurrentStatus.Count > 0)
                 {
                     model.Department = item.CurrentStatus.FirstOrDefault().Department;
@@ -41,11 +42,18 @@ namespace Demo.Controllers
         }
 
 
-        public ActionResult TeamDetail()
+        public ActionResult TeamDetail(int? id)
         {
             var skills = Ide.GetAllSkills();
             ViewBag.LstSkills = skills;
-            return View();
+
+            TeamDetailModel model = new TeamDetailModel();
+            if(id > 0)
+            {
+                model = Ide.GetTeamDetailById(id);
+            }          
+
+            return View(model);
         }
 
         [HttpPost]
@@ -97,7 +105,18 @@ namespace Demo.Controllers
                 {
                     model.LstEducationDetailModel = model.LstEducationDetailModel.Where(x => x.Course != null).ToList();
                 }
-                Ide.AddTeamDetail(model);
+
+                if(model.Id > 0)
+                {
+                    model.LstExprienceDetailModel.ForEach(x => x.DetailId = model.Id.Value);
+                    Ide.EditTeamDetail(model);
+                }
+                else
+                {
+                    Ide.AddTeamDetail(model);
+                }
+
+                //Ide.AddTeamDetail(model);
 
                 return RedirectToAction("Index");
             }
@@ -114,6 +133,13 @@ namespace Demo.Controllers
         {
             var model = new ExprienceDetailModel { Id = id };
             return View("_NewExprienceDetailRow", model);
+        }
+
+        [HttpPost]
+        public ActionResult AddExprienceDetail(TeamDetailModel model)
+        {
+
+            return Json(true);
         }
 
         public ActionResult NewEducationDetailRow(int id)

@@ -92,6 +92,18 @@
         margin-bottom: 20px;
     }
 
+    .set-table {
+        margin-top: 20px;
+        padding-top: 20px;
+        padding-left: 20px;
+        margin-bottom: 20px;
+    }
+
+    .removeButton {
+        width: 15%;
+        float: right;
+        margin-right: 10px;
+    }
 </style>
 
 <body>
@@ -99,8 +111,8 @@
         @*<h1>Details:</h1>*@
         <!-- One "tab" for each step in the form: -->
         <div class="tab">
-           <h1> Personal Details :</h1>
-
+            <h1> Personal Details :</h1>
+           
             <div class="form-group">
                 <p><img id="output" width="200" /></p>
                 <input type="file" name="postedFile" accept="image/*" onchange="ValidateSingleInput(this);" />
@@ -141,6 +153,7 @@
         </div>
         <div class="tab">
             <h1> Bank Details :</h1>
+            @Html.HiddenFor(m=>m.BankDetailId)
             <div class="form-group">
                 @Html.LabelFor(m => m.AccountNo)
                 @Html.TextBoxFor(m => m.AccountNo, new { @class = "form-control" })
@@ -170,7 +183,7 @@
         </div>
         <div class="tab">
             <h1> Professional Details :</h1>
-
+            @Html.HiddenFor(m=>m.ProfessionalDetailId)
             <div class="form-group">
                 <input type="file" name="postedResumeFile" />
             </div>
@@ -193,7 +206,7 @@
         </div>
         <div class="tab">
             <h1>  Current Status:</h1>
-           
+
             <div class="form-group">
                 @Html.LabelFor(m => m.Company)
                 @Html.TextBoxFor(m => m.Company, new { @class = "form-control", @Value = "Albiorix Technology Private Limited", @readonly = "readonly" })
@@ -230,7 +243,63 @@
             <h1> Exprience Details:</h1>
             <input type="button" id="btnAdd" value="Add New Exprience" class="btn btn-primary set-btn" />
 
-            <div id="container"> </div>
+            <div id="container">
+
+                @if (Model.Id > 0)
+                {
+                    int i = 0;
+                    foreach (var item in Model.LstExprienceDetailModel)
+                    {
+
+                        <div class="table-bordered set-table">
+
+                            <input type="hidden" id="LstExprienceDetailModel_@(i)__Id" class="iHidden" name="LstExprienceDetailModel[@i].Id" value="@item.Id">
+
+                            <input type="button" value="remove" class="removeButton btn btn-danger">
+
+                            <div class="form-group">
+                                <label>Company</label>
+                                <input type='text' class="form-control" id='LstExprienceDetailModel_@(i)__Company' name='LstExprienceDetailModel[@i].Company' value="@item.Company" />
+                            </div>
+
+                            <div class="form-group">
+                                <label>Designation</label>
+                                <input type='text' class="form-control" id='LstExprienceDetailModel_@(i)__Designation' name='LstExprienceDetailModel[@i].Designation' value="@item.Designation" />
+                            </div>
+
+                            <div class="form-group">
+                                <label>Department</label>
+                                <input type='text' class="form-control" id='LstExprienceDetailModel_@(i)__Department' name='LstExprienceDetailModel[@i].Department' value="@item.Department" />
+                            </div>
+
+                            <div class="form-group">
+                                <label>CTC</label>
+                                <input type='text' class="form-control" id='LstExprienceDetailModel_@(i)__CTC' name='LstExprienceDetailModel[@i].CTC' value="@item.CTC" />
+                            </div>
+
+                            <div class="form-group">
+                                <label>From</label>
+                                <input type='date' class="form-control" id='LstExprienceDetailModel_@(i)__From' name='LstExprienceDetailModel[@i].From' value="@item.From" />
+                            </div>
+
+                            <div class="form-group">
+                                <label>To</label>
+                                <input type='date' class="form-control" id='LstExprienceDetailModel_@(i)__To' name='LstExprienceDetailModel[@i].To' value="@item.To" />
+                            </div>
+
+                        </div>
+
+
+                        i++;
+
+
+                    }
+                }
+            </div>
+            @*<input id="submit-exprience" value="Submit Exprience" class="btn btn-primary">*@
+
+           
+
 
         </div>
 
@@ -261,6 +330,15 @@
 </body>
 
 <script>
+
+    $("#SkillIds").select2({
+        width: "200"
+    });
+
+    if (@Model.SkillIds.Count > 0) {
+        var selectedSkillId = @Html.Raw(Json.Encode(Model.SkillIds));
+         $("#SkillIds").val(selectedSkillId).trigger("change");
+    }
 
     var now = new Date(),
     currentDate = now.toISOString().substring(0, 10);
@@ -295,7 +373,7 @@
             }
     });
 
-    $("#AadharCardNo").change(function () {       
+    $("#AadharCardNo").change(function () {
         $("#error-aadharcard").text("");
         var regex = /(^[0-9]{4}[0-9]{4}[0-9]{4}$)|(^[0-9]{4}\s[0-9]{4}\s[0-9]{4}$)|(^[0-9]{4}-[0-9]{4}-[0-9]{4}$)/;
         if (!regex.test($("#AadharCardNo").val())) {
@@ -303,9 +381,6 @@
         }
     });
 
-    $("#SkillIds").select2({
-        width: "200"
-    });
 
     $(function () {
         $("#btnAdd").click(function (e) {
@@ -318,6 +393,7 @@
         });
     });
     });
+
 
      $(function () {
          $("#btnAddEducation").click(function (e) {
@@ -386,7 +462,7 @@
         fixStepIndicator(n)
     }
 
-    function nextPrev(n) {        
+    function nextPrev(n) {
         // This function will figure out which tab to display
         var x = document.getElementsByClassName("tab");
         // Exit the function if any field in the current tab is invalid:

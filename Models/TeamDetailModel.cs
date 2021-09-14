@@ -37,6 +37,8 @@ namespace Demo.Models
 
         // bank detail        
 
+        public int? BankDetailId { get; set; }
+
         [Required]
         public string IFSC { get; set; }
 
@@ -50,6 +52,9 @@ namespace Demo.Models
         public string AadharCardNo { get; set; }
 
         // professional detail
+
+        public int? ProfessionalDetailId { get; set; }
+
         public int? Year { get; set; }
 
         public int? Month { get; set; }
@@ -57,6 +62,8 @@ namespace Demo.Models
         public List<int> SkillIds { get; set; }
 
         public List<string> LstSkills { get; set; }
+
+        public int? ResumeFileId { get; set; }
 
         public FileModel ResumeFileModel { get; set; }
 

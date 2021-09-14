@@ -6,6 +6,9 @@
         {
             ResumeFileModel = new FileModel();
         }
+
+        public int ProfessionalDetailId { get; set; }
+
         public int? Year { get; set; }
 
         public int? Month { get; set; }

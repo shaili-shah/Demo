@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using Demo.Models;
 using System;
-using System.Data.Entity;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 
 namespace Demo.Repository
@@ -20,7 +20,7 @@ namespace Demo.Repository
 
         public IEnumerable<Detail> GetPersonalDetail()
         {
-            return _context.Details.Include(x=>x.CurrentStatus).ToList();
+            return _context.Details.Include(x => x.CurrentStatus).ToList();
 
         }
 
@@ -28,6 +28,82 @@ namespace Demo.Repository
         {
             return _context.Skills.ToList();
 
+        }
+
+        public TeamDetailModel GetTeamDetailById(int? id)
+        {
+            TeamDetailModel model = new TeamDetailModel();
+            var detail = _context.Details.Include(x => x.BankDetails).Include(x => x.ProfessionalDetails)
+                .Include(x => x.CurrentStatus).Include(x => x.ExprienceDetails).Include(x => x.EducationDetails)
+                .FirstOrDefault(x => x.Id == id);
+
+            if (detail != null)
+            {
+                var config = new MapperConfiguration(cfg =>
+                {
+                    cfg.CreateMap<Detail, TeamDetailModel>();
+                    cfg.CreateMap<BankDetail, TeamDetailModel>();
+                    cfg.CreateMap<ProfessionalDetail, TeamDetailModel>();
+                    cfg.CreateMap<CurrentStatu, TeamDetailModel>();
+                    cfg.CreateMap<ExprienceDetail, ExprienceDetailModel>();
+                    cfg.CreateMap<EducationDetail, EducationDetailModel>();
+
+                });
+                IMapper mapper = config.CreateMapper();
+                model = mapper.Map<Detail, TeamDetailModel>(detail);
+                File file = _context.Files.FirstOrDefault(x => x.Id == detail.FileId);
+                if (file != null)
+                {
+                    FileModel fileModel = new FileModel();
+                    fileModel.Data = file.Data;
+                    fileModel.ContentType = file.ContentType;
+                    fileModel.Name = file.Name;
+                    fileModel.Id = file.Id;
+                    model.FileModel = fileModel;
+                }
+
+                if (detail.BankDetails.Any())
+                {
+                    model = mapper.Map(detail.BankDetails.FirstOrDefault(), model);
+                    model.BankDetailId = detail.BankDetails.FirstOrDefault().Id;
+                }
+                if (detail.ProfessionalDetails.Any())
+                {
+                    model.ProfessionalDetailId = detail.ProfessionalDetails.FirstOrDefault().Id;
+                    model.Year = detail.ProfessionalDetails.FirstOrDefault().Year;
+                    model.Month = detail.ProfessionalDetails.FirstOrDefault().Month;
+                    var skillIds = detail.ProfessionalDetails.FirstOrDefault().SkillIds;
+                    model.SkillIds = skillIds.Split(',').Select(int.Parse).ToList();
+                    int? resumeId = detail.ProfessionalDetails.FirstOrDefault().FileId;
+                    File resume = _context.Files.FirstOrDefault(x => x.Id == resumeId);
+                    if (resume != null)
+                    {
+                        FileModel resumeFileModel = new FileModel();
+                        resumeFileModel.Data = resume.Data;
+                        resumeFileModel.ContentType = resume.ContentType;
+                        resumeFileModel.Name = resume.Name;
+                        resumeFileModel.Id = resume.Id;
+                        model.ResumeFileModel = resumeFileModel;
+                    }
+
+                }
+                if (detail.CurrentStatus.Any())
+                {
+                    model = mapper.Map(detail.CurrentStatus.FirstOrDefault(), model);
+                }
+                if (detail.ExprienceDetails.Any())
+                {
+                    model.LstExprienceDetailModel = mapper.Map(detail.ExprienceDetails.ToList(), model.LstExprienceDetailModel);
+                }
+                if (detail.EducationDetails.Any())
+                {
+                    model.LstEducationDetailModel = mapper.Map(detail.EducationDetails.ToList(), model.LstEducationDetailModel);
+                }
+
+                model.Id = detail.Id;
+            }
+
+            return model;
         }
 
 
@@ -49,7 +125,7 @@ namespace Demo.Repository
             _context.ProfessionalDetails.Add(professionalDetail);
         }
 
-        public void InsertFile(File file)   
+        public void InsertFile(File file)
         {
             _context.Files.Add(file);
         }
@@ -69,16 +145,32 @@ namespace Demo.Repository
             _context.EducationDetails.AddRange(lstEducationDetails);
         }
 
+        public void UpdatePersonalDetail(Detail detail)
+        {
+            _context.Entry(detail).State = EntityState.Modified;
+        }       
+        
+        public void UpdateBankDetail(BankDetail bankDetail)
+        {
+            _context.Entry(bankDetail).State = EntityState.Modified;
+        }
+
+        public void UpdateProfessionalDetail(ProfessionalDetail professionalDetail)
+        {
+            _context.Entry(professionalDetail).State = EntityState.Modified;
+        }
+
         public void Save()
         {
             _context.SaveChanges();
         }
-        
+
 
         public bool AddTeamDetail(TeamDetailModel model)
         {
-           // mapping
-            var config = new MapperConfiguration(cfg => {
+            // mapping
+            var config = new MapperConfiguration(cfg =>
+            {
                 cfg.CreateMap<TeamDetailModel, PersonalDetailModel>();
                 cfg.CreateMap<TeamDetailModel, BankDetailModel>();
                 cfg.CreateMap<TeamDetailModel, ProfessionalDetailModel>();
@@ -91,7 +183,7 @@ namespace Demo.Repository
             PersonalDetailModel personalDetailModel = new PersonalDetailModel();
             IMapper mapper = config.CreateMapper();
             personalDetailModel = mapper.Map<TeamDetailModel, PersonalDetailModel>(model);
-            Detail detail =  AddPersonalDetail(personalDetailModel);
+            Detail detail = AddPersonalDetail(personalDetailModel);
 
 
             // bank detail
@@ -103,7 +195,7 @@ namespace Demo.Repository
             // professional detail
             ProfessionalDetailModel professionalDetailModel = new ProfessionalDetailModel();
             professionalDetailModel = mapper.Map<TeamDetailModel, ProfessionalDetailModel>(model);
-            professionalDetailModel.DetailId = detail.Id;           
+            professionalDetailModel.DetailId = detail.Id;
             if (model.SkillIds.Any())
             {
                 professionalDetailModel.SkillIds = String.Join(",", model.SkillIds);
@@ -133,15 +225,16 @@ namespace Demo.Repository
 
         public Detail AddPersonalDetail(PersonalDetailModel model)
         {
-            var config = new MapperConfiguration(cfg => {
+            var config = new MapperConfiguration(cfg =>
+            {
                 cfg.CreateMap<PersonalDetailModel, Detail>();
                 cfg.CreateMap<FileModel, File>();
             });
 
-            IMapper mapper = config.CreateMapper();            
+            IMapper mapper = config.CreateMapper();
             var data = mapper.Map<PersonalDetailModel, Detail>(model);
 
-            if(model.FileModel != null && model.FileModel.Data != null)
+            if (model.FileModel != null && model.FileModel.Data != null)
             {
                 var file = mapper.Map<FileModel, File>(model.FileModel);
                 InsertFile(file);
@@ -154,19 +247,19 @@ namespace Demo.Repository
             Save();
 
             return data;
-        } 
-
+        }
 
         public bool AddBankDetail(BankDetailModel model)
         {
-            var config = new MapperConfiguration(cfg => {
+            var config = new MapperConfiguration(cfg =>
+            {
                 cfg.CreateMap<BankDetailModel, BankDetail>();
             });
 
             IMapper mapper = config.CreateMapper();
             var data = mapper.Map<BankDetailModel, BankDetail>(model);
 
-            
+
             InsertBankDetail(data);
             Save();
 
@@ -175,7 +268,8 @@ namespace Demo.Repository
 
         public bool AddProfessionalDetail(ProfessionalDetailModel model)
         {
-            var config = new MapperConfiguration(cfg => {
+            var config = new MapperConfiguration(cfg =>
+            {
                 cfg.CreateMap<ProfessionalDetailModel, ProfessionalDetail>();
                 cfg.CreateMap<FileModel, File>();
             });
@@ -200,7 +294,8 @@ namespace Demo.Repository
 
         public bool AddCurrentStatus(CurrentStatusModel model)
         {
-            var config = new MapperConfiguration(cfg => {
+            var config = new MapperConfiguration(cfg =>
+            {
                 cfg.CreateMap<CurrentStatusModel, CurrentStatu>();
             });
 
@@ -215,7 +310,8 @@ namespace Demo.Repository
 
         public bool AddExpriencesDetail(List<ExprienceDetailModel> lstmodel)
         {
-            var config = new MapperConfiguration(cfg => {
+            var config = new MapperConfiguration(cfg =>
+            {
                 cfg.CreateMap<ExprienceDetailModel, ExprienceDetail>();
             });
 
@@ -230,7 +326,8 @@ namespace Demo.Repository
 
         public bool AddEducationDetail(List<EducationDetailModel> lstmodel)
         {
-            var config = new MapperConfiguration(cfg => {
+            var config = new MapperConfiguration(cfg =>
+            {
                 cfg.CreateMap<EducationDetailModel, EducationDetail>();
             });
 
@@ -242,6 +339,115 @@ namespace Demo.Repository
 
             return true;
         }
+
+        #region edit 
+
+        public bool EditTeamDetail(TeamDetailModel model)
+        {
+            // mapping
+            var config = new MapperConfiguration(cfg =>
+            {
+                cfg.CreateMap<TeamDetailModel, PersonalDetailModel>();
+                cfg.CreateMap<TeamDetailModel, BankDetailModel>();
+                cfg.CreateMap<TeamDetailModel, ProfessionalDetailModel>();
+                cfg.CreateMap<TeamDetailModel, CurrentStatusModel>();
+                cfg.CreateMap<TeamModel, ExprienceDetailModel>();
+
+            });
+
+            // personal detail
+            PersonalDetailModel personalDetailModel = new PersonalDetailModel();
+            IMapper mapper = config.CreateMapper();
+            personalDetailModel = mapper.Map<TeamDetailModel, PersonalDetailModel>(model);
+            Detail detail = EditPersonalDetail(personalDetailModel);
+
+            // bank detail
+            BankDetailModel bankDetailModel = new BankDetailModel();
+            bankDetailModel = mapper.Map<TeamDetailModel, BankDetailModel>(model);
+            bankDetailModel.DetailId = detail.Id;
+            EditBankDetail(bankDetailModel);
+
+            // professional detail
+            ProfessionalDetailModel professionalDetailModel = new ProfessionalDetailModel();
+            professionalDetailModel = mapper.Map<TeamDetailModel, ProfessionalDetailModel>(model);
+            professionalDetailModel.DetailId = detail.Id;
+            if (model.SkillIds.Any())
+            {
+                professionalDetailModel.SkillIds = String.Join(",", model.SkillIds);
+            }
+            EditProfessionalDetail(professionalDetailModel);
+
+            return true;
+        }
+
+        public Detail EditPersonalDetail(PersonalDetailModel model)
+        {
+            var config = new MapperConfiguration(cfg =>
+            {
+                cfg.CreateMap<PersonalDetailModel, Detail>();
+                cfg.CreateMap<FileModel, File>();
+            });
+
+            IMapper mapper = config.CreateMapper();
+            var data = mapper.Map<PersonalDetailModel, Detail>(model);
+
+            if (model.FileModel != null && model.FileModel.Data != null)
+            {
+                var file = mapper.Map<FileModel, File>(model.FileModel);
+                InsertFile(file);
+                Save();
+
+                data.FileId = file.Id;
+            }
+
+            UpdatePersonalDetail(data);
+            Save();
+
+            return data;
+        }
+
+        public bool EditBankDetail(BankDetailModel model)
+        {
+            var config = new MapperConfiguration(cfg =>
+            {
+                cfg.CreateMap<BankDetailModel, BankDetail>();
+            });
+
+            IMapper mapper = config.CreateMapper();
+            var data = mapper.Map<BankDetailModel, BankDetail>(model);
+            data.Id = model.BankDetailId;
+            UpdateBankDetail(data);
+            Save();
+
+            return true;
+        }
+
+        public bool EditProfessionalDetail(ProfessionalDetailModel model)
+        {
+            var config = new MapperConfiguration(cfg =>
+            {
+                cfg.CreateMap<ProfessionalDetailModel, ProfessionalDetail>();
+                cfg.CreateMap<FileModel, File>();
+            });
+
+            IMapper mapper = config.CreateMapper();
+            var data = mapper.Map<ProfessionalDetailModel, ProfessionalDetail>(model);
+            data.Id = model.ProfessionalDetailId;
+            if (model.ResumeFileModel != null && model.ResumeFileModel.Data != null)
+            {
+                var file = mapper.Map<FileModel, File>(model.ResumeFileModel);
+                InsertFile(file);
+                Save();
+
+                data.FileId = file.Id;
+            }
+
+            UpdateProfessionalDetail(data);
+            Save();
+            return true;
+        }
+
+        #endregion 
 
 
     }

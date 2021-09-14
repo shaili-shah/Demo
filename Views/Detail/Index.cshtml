@@ -19,6 +19,7 @@
                 <th>Name</th>
                 <th>Designation</th>
                 <th>Department</th>
+                <th>Action</th>
             </tr>
         </thead>
         <tbody>
@@ -29,6 +30,7 @@
                     <td>@data.Name </td>
                     <td>@data.Designation </td>
                     <td>@data.Department </td>
+                    <td> <a href="@Url.Action("TeamDetail","Detail", new { id = data.Id})">Edit</a> </td>
                 </tr>
 
             }

@@ -22,5 +22,9 @@ namespace Demo.Repository
         bool AddExpriencesDetail(List<ExprienceDetailModel> lstmodel);
 
         bool AddEducationDetail(List<EducationDetailModel> lstmodel);
+
+        TeamDetailModel GetTeamDetailById(int? id);
+
+        bool EditTeamDetail(TeamDetailModel model);
     }
 }
