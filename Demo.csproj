@@ -243,10 +243,7 @@
     <Content Include="Views\Home\About.cshtml" />
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
-    <Content Include="Views\Detail\Detail.cshtml" />
     <Content Include="Views\Detail\Index.cshtml" />
-    <Content Include="Views\Detail\PersonalDetail.cshtml" />
-    <Content Include="Views\Detail\BankDetails.cshtml" />
     <Content Include="Views\Detail\TeamDetail.cshtml" />
     <Content Include="Views\Detail\_NewExprienceDetailRow.cshtml" />
     <Content Include="Views\Detail\_NewEducationDetailRow.cshtml" />

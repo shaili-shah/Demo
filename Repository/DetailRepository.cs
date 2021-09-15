@@ -73,7 +73,10 @@ namespace Demo.Repository
                     model.Year = detail.ProfessionalDetails.FirstOrDefault().Year;
                     model.Month = detail.ProfessionalDetails.FirstOrDefault().Month;
                     var skillIds = detail.ProfessionalDetails.FirstOrDefault().SkillIds;
-                    model.SkillIds = skillIds.Split(',').Select(int.Parse).ToList();
+                    if (!string.IsNullOrWhiteSpace(skillIds))
+                    {
+                        model.SkillIds = skillIds.Split(',').Select(int.Parse).ToList();
+                    }
                     int? resumeId = detail.ProfessionalDetails.FirstOrDefault().FileId;
                     File resume = _context.Files.FirstOrDefault(x => x.Id == resumeId);
                     if (resume != null)
@@ -202,15 +205,12 @@ namespace Demo.Repository
             bankDetailModel.DetailId = detail.Id;
             AddBankDetail(bankDetailModel);
 
-            // professional detail
+            // professional detail            
             ProfessionalDetailModel professionalDetailModel = new ProfessionalDetailModel();
             professionalDetailModel = mapper.Map<TeamDetailModel, ProfessionalDetailModel>(model);
             professionalDetailModel.DetailId = detail.Id;
-            if (model.SkillIds.Any())
-            {
-                professionalDetailModel.SkillIds = String.Join(",", model.SkillIds);
-            }
-            AddProfessionalDetail(professionalDetailModel);
+            professionalDetailModel.SkillIds = model.SkillIds.Any() ? String.Join(",", model.SkillIds) : null;           
+            AddProfessionalDetail(professionalDetailModel);                      
 
             // current status
             CurrentStatusModel currentStatusModel = new CurrentStatusModel();

@@ -152,12 +152,12 @@
 
             <div class="form-group">
                 @Html.LabelFor(m => m.BirthDate)
-                        @Html.TextBoxFor(m => m.BirthDate, "{0:MM/dd/yyyy}", new
-                        {
-                            @class = "form-control datepicker",
-                            required = true
-        })
-               
+                @Html.TextBoxFor(m => m.BirthDate, "{0:MM/dd/yyyy}", new
+                {
+                    @class = "form-control datepicker",
+                    required = true
+})
+
 
                 @Html.ValidationMessageFor(m => m.BirthDate, "", new { @class = "text-danger" })
             </div>
@@ -272,7 +272,7 @@
 
             <div id="container">
 
-                @if (Model.Id > 0)
+                @if (Model.Id > 0 && Model != null)
                 {
                     int i = 0;
                     foreach (var item in Model.LstExprienceDetailModel)
@@ -389,6 +389,8 @@
 
         </div>
 
+       <p class="text-danger"> @ViewBag.errorMsg</p>
+
         <div style="overflow:auto;">
             <div style="float:right;">
                 <button type="button" id="prevBtn" onclick="nextPrev(-1)">Previous</button>
@@ -414,7 +416,7 @@
         endDate: 'today',
         autoclose: true,
         todayHighlight: true
-    })/*.datepicker('update', new Date())*/;
+    });
 
 
     $("#SkillIds").select2({

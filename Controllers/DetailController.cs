@@ -15,12 +15,11 @@ namespace Demo.Controllers
 
         private IDetail Ide;
 
-
-
         public DetailController()
         {
             Ide = new DetailRepository(new DemoEntities());
         }
+
         // GET: Detail
         public ActionResult Index()
         {
@@ -41,7 +40,6 @@ namespace Demo.Controllers
             }
             return View(lstmodel);
         }
-
 
         public ActionResult TeamDetail(int? id)
         {
@@ -68,11 +66,22 @@ namespace Demo.Controllers
         [HttpPost]
         public ActionResult TeamDetail(TeamDetailModel model, HttpPostedFileBase postedFile, HttpPostedFileBase postedResumeFile)
         {
+            var skills = Ide.GetAllSkills();
+            ViewBag.LstSkills = skills;
             if (ModelState.IsValid)
             {
-
                 try
                 {
+                    if (model.BirthDate == DateTime.MinValue) {
+
+                        ViewBag.errorMsg = "Please select valid BirthDate.";
+                        return View(new TeamDetailModel());
+                    } 
+                    if (model.WorkingFrom == DateTime.MinValue) {
+                        ViewBag.errorMsg = "Please select valid workingFrom.";
+                        return View(new TeamDetailModel());
+                    }                    
+
                     byte[] bytes;
 
                     byte[] rbytes;
@@ -115,7 +124,7 @@ namespace Demo.Controllers
                     }
                     if (model != null && model.LstEducationDetailModel != null && model.LstEducationDetailModel.Any())
                     {
-                        model.LstEducationDetailModel = model.LstEducationDetailModel.Where(x => x.Course != null).ToList();
+                        model.LstEducationDetailModel = model.LstEducationDetailModel.Where(x => x.Course != null && x.University!=null).ToList();
                     }
 
                     if (model.Id > 0)
@@ -132,15 +141,13 @@ namespace Demo.Controllers
                 }
                 catch (Exception ex)
                 {
-                    string msg = ex.Message;
-                    return View();
+                    ViewBag.errorMsg = ex.Message;
+                    return View(new TeamDetailModel());
                 }              
             }
             else
             {
-                IEnumerable<ModelError> allErrors = ModelState.Values.SelectMany(v => v.Errors);
-                var skills = Ide.GetAllSkills();
-                ViewBag.LstSkills = skills;
+                IEnumerable<ModelError> allErrors = ModelState.Values.SelectMany(v => v.Errors);              
                 return View(model);
             }
         }
@@ -161,50 +168,7 @@ namespace Demo.Controllers
         {
             ViewBag.ActiveTab = activeTab;
             return View();
-        }
-
-        public ActionResult PersonalDetail()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        public ActionResult PersonalDetail(HttpPostedFileBase postedFile, PersonalDetailModel model)
-        {
-
-            if (ModelState.IsValid)
-            {
-                byte[] bytes;
-
-                if (postedFile != null)
-                {
-                    using (BinaryReader br = new BinaryReader(postedFile.InputStream))
-                    {
-                        bytes = br.ReadBytes(postedFile.ContentLength);
-                    }
-
-                    FileModel fileModel = new FileModel
-                    {
-                        Name = Path.GetFileName(postedFile.FileName),
-                        ContentType = postedFile.ContentType,
-                        Data = bytes
-                    };
-                    model.FileModel = fileModel;
-                }
-
-                Ide.AddPersonalDetail(model);
-
-
-                return RedirectToAction("Detail", new { activeTab = (int)TabEnum.BankDetails });
-            }
-
-            return RedirectToAction("Detail", new { activeTab = (int)TabEnum.PersonalDetails });
-        }
-
-        public ActionResult BankDetails()
-        {
-            return View();
-        }
+        }       
 
     }
 }
