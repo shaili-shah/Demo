@@ -90,6 +90,7 @@ namespace Demo.Repository
                 if (detail.CurrentStatus.Any())
                 {
                     model = mapper.Map(detail.CurrentStatus.FirstOrDefault(), model);
+                    model.CurrentStatusId = detail.CurrentStatus.FirstOrDefault().Id;
                 }
                 if (detail.ExprienceDetails.Any())
                 {
@@ -148,8 +149,8 @@ namespace Demo.Repository
         public void UpdatePersonalDetail(Detail detail)
         {
             _context.Entry(detail).State = EntityState.Modified;
-        }       
-        
+        }
+
         public void UpdateBankDetail(BankDetail bankDetail)
         {
             _context.Entry(bankDetail).State = EntityState.Modified;
@@ -158,6 +159,16 @@ namespace Demo.Repository
         public void UpdateProfessionalDetail(ProfessionalDetail professionalDetail)
         {
             _context.Entry(professionalDetail).State = EntityState.Modified;
+        }
+
+        public void UpdateCurrentStatus(CurrentStatu currentStatu)
+        {
+            _context.Entry(currentStatu).State = EntityState.Modified;
+        }
+
+        public void UpdateExprienceDetail(ExprienceDetail exprienceDetail)
+        {
+            _context.Entry(exprienceDetail).State = EntityState.Modified;
         }
 
         public void Save()
@@ -377,6 +388,39 @@ namespace Demo.Repository
             }
             EditProfessionalDetail(professionalDetailModel);
 
+            // current status
+            CurrentStatusModel currentStatusModel = new CurrentStatusModel();
+            currentStatusModel = mapper.Map<TeamDetailModel, CurrentStatusModel>(model);
+            currentStatusModel.DetailId = detail.Id;
+            EditCurrentStatus(currentStatusModel);
+
+            // exprience detail
+            List<ExprienceDetailModel> lstExprienceDetailModel = new List<ExprienceDetailModel>();
+            lstExprienceDetailModel = model.LstExprienceDetailModel;
+
+            List<ExprienceDetail> oldExprienceDetails = new List<ExprienceDetail>();
+            oldExprienceDetails = _context.ExprienceDetails.Where(x => x.DetailId == model.Id).ToList();
+            if (oldExprienceDetails.Any())
+            {
+                DeleteExprienceDetails(oldExprienceDetails);
+            }
+            lstExprienceDetailModel.ForEach(x => x.Id = 0);
+            AddExpriencesDetail(lstExprienceDetailModel);
+
+
+            // education detail
+            List<EducationDetailModel> lstEducationDetailModel = new List<EducationDetailModel>();
+            lstEducationDetailModel = model.LstEducationDetailModel;
+
+            List<EducationDetail> oldEducationDetails = new List<EducationDetail>();
+            oldEducationDetails = _context.EducationDetails.Where(x => x.DetailId == model.Id).ToList();
+            if (oldEducationDetails.Any())
+            {
+                DeleteEducationDetails(oldEducationDetails);
+            }
+            lstEducationDetailModel.ForEach(x => x.Id = 0);
+            AddEducationDetail(lstEducationDetailModel);
+
             return true;
         }
 
@@ -447,8 +491,39 @@ namespace Demo.Repository
             return true;
         }
 
-        #endregion 
+        public bool EditCurrentStatus(CurrentStatusModel model)
+        {
+            var config = new MapperConfiguration(cfg =>
+            {
+                cfg.CreateMap<CurrentStatusModel, CurrentStatu>();
+            });
 
+            IMapper mapper = config.CreateMapper();
+            var data = mapper.Map<CurrentStatusModel, CurrentStatu>(model);
+            data.Id = model.CurrentStatusId;
+            UpdateCurrentStatus(data);
+            Save();
+            return true;
+        }
+
+        #endregion
+
+        #region Delete
+
+        public bool DeleteExprienceDetails(List<ExprienceDetail> exprienceDetails)
+        {
+            _context.ExprienceDetails.RemoveRange(exprienceDetails);
+            Save();
+            return true;
+        }
+
+        public bool DeleteEducationDetails(List<EducationDetail> educationDetails)
+        {
+            _context.EducationDetails.RemoveRange(educationDetails);
+            Save();
+            return true;
+        }
+        #endregion
 
     }
 }

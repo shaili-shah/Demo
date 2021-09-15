@@ -69,6 +69,8 @@ namespace Demo.Models
 
         // current status
         
+        public int? CurrentStatusId { get; set; }
+
         [Required]
         public string Company { get; set; }
 

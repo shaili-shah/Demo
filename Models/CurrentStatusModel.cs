@@ -4,6 +4,8 @@ namespace Demo.Models
 {
     public class CurrentStatusModel
     {
+        public int CurrentStatusId { get; set; }
+
         public string Company { get; set; }
 
         public string Designation { get; set; }

@@ -109,15 +109,13 @@ namespace Demo.Controllers
                 if(model.Id > 0)
                 {
                     model.LstExprienceDetailModel.ForEach(x => x.DetailId = model.Id.Value);
+                    model.LstEducationDetailModel.ForEach(x => x.DetailId = model.Id.Value);
                     Ide.EditTeamDetail(model);
                 }
                 else
                 {
                     Ide.AddTeamDetail(model);
                 }
-
-                //Ide.AddTeamDetail(model);
-
                 return RedirectToAction("Index");
             }
             else
@@ -133,13 +131,6 @@ namespace Demo.Controllers
         {
             var model = new ExprienceDetailModel { Id = id };
             return View("_NewExprienceDetailRow", model);
-        }
-
-        [HttpPost]
-        public ActionResult AddExprienceDetail(TeamDetailModel model)
-        {
-
-            return Json(true);
         }
 
         public ActionResult NewEducationDetailRow(int id)
