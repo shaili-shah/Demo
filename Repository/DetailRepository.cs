@@ -196,7 +196,6 @@ namespace Demo.Repository
             personalDetailModel = mapper.Map<TeamDetailModel, PersonalDetailModel>(model);
             Detail detail = AddPersonalDetail(personalDetailModel);
 
-
             // bank detail
             BankDetailModel bankDetailModel = new BankDetailModel();
             bankDetailModel = mapper.Map<TeamDetailModel, BankDetailModel>(model);
@@ -219,17 +218,23 @@ namespace Demo.Repository
             currentStatusModel.DetailId = detail.Id;
             AddCurrentStatus(currentStatusModel);
 
-            // exprience detail
-            List<ExprienceDetailModel> lstExprienceDetailModel = new List<ExprienceDetailModel>();
-            model.LstExprienceDetailModel.ToList().ForEach(s => s.DetailId = detail.Id);
-            lstExprienceDetailModel = model.LstExprienceDetailModel;
-            AddExpriencesDetail(lstExprienceDetailModel);
+            // exprience detail            
+            if (model.LstExprienceDetailModel != null && model.LstExprienceDetailModel.Any())
+            {
+                List<ExprienceDetailModel> lstExprienceDetailModel = new List<ExprienceDetailModel>();
+                model.LstExprienceDetailModel.ToList().ForEach(s => s.DetailId = detail.Id);
+                lstExprienceDetailModel = model.LstExprienceDetailModel;
+                AddExpriencesDetail(lstExprienceDetailModel);
+            }
 
             // education detail
-            List<EducationDetailModel> lstEducationDetailModel = new List<EducationDetailModel>();
-            model.LstEducationDetailModel.ToList().ForEach(s => s.DetailId = detail.Id);
-            lstEducationDetailModel = model.LstEducationDetailModel;
-            AddEducationDetail(lstEducationDetailModel);
+            if (model.LstEducationDetailModel!= null && model.LstEducationDetailModel.Any())
+            {
+                List<EducationDetailModel> lstEducationDetailModel = new List<EducationDetailModel>();
+                model.LstEducationDetailModel.ToList().ForEach(s => s.DetailId = detail.Id);
+                lstEducationDetailModel = model.LstEducationDetailModel;
+                AddEducationDetail(lstEducationDetailModel);
+            }           
 
             return true;
         }
@@ -398,28 +403,34 @@ namespace Demo.Repository
             List<ExprienceDetailModel> lstExprienceDetailModel = new List<ExprienceDetailModel>();
             lstExprienceDetailModel = model.LstExprienceDetailModel;
 
-            List<ExprienceDetail> oldExprienceDetails = new List<ExprienceDetail>();
-            oldExprienceDetails = _context.ExprienceDetails.Where(x => x.DetailId == model.Id).ToList();
-            if (oldExprienceDetails.Any())
+            if (model.LstExprienceDetailModel!= null && model.LstExprienceDetailModel.Any())
             {
-                DeleteExprienceDetails(oldExprienceDetails);
-            }
-            lstExprienceDetailModel.ForEach(x => x.Id = 0);
-            AddExpriencesDetail(lstExprienceDetailModel);
+                List<ExprienceDetail> oldExprienceDetails = new List<ExprienceDetail>();
+                oldExprienceDetails = _context.ExprienceDetails.Where(x => x.DetailId == model.Id).ToList();
+                if (oldExprienceDetails.Any())
+                {
+                    DeleteExprienceDetails(oldExprienceDetails);
+                }
+                lstExprienceDetailModel.ForEach(x => x.Id = 0);
+                AddExpriencesDetail(lstExprienceDetailModel);
 
+            }
 
             // education detail
             List<EducationDetailModel> lstEducationDetailModel = new List<EducationDetailModel>();
             lstEducationDetailModel = model.LstEducationDetailModel;
 
-            List<EducationDetail> oldEducationDetails = new List<EducationDetail>();
-            oldEducationDetails = _context.EducationDetails.Where(x => x.DetailId == model.Id).ToList();
-            if (oldEducationDetails.Any())
+            if (model.LstEducationDetailModel != null && model.LstEducationDetailModel.Any())
             {
-                DeleteEducationDetails(oldEducationDetails);
+                List<EducationDetail> oldEducationDetails = new List<EducationDetail>();
+                oldEducationDetails = _context.EducationDetails.Where(x => x.DetailId == model.Id).ToList();
+                if (oldEducationDetails.Any())
+                {
+                    DeleteEducationDetails(oldEducationDetails);
+                }
+                lstEducationDetailModel.ForEach(x => x.Id = 0);
+                AddEducationDetail(lstEducationDetailModel);
             }
-            lstEducationDetailModel.ForEach(x => x.Id = 0);
-            AddEducationDetail(lstEducationDetailModel);
 
             return true;
         }

@@ -43,12 +43,21 @@
 
     <div class="form-group">
         <label>From</label>
-        <input type='date' class="form-control" id='LstExprienceDetailModel_@(Model.Id)__From' name='LstExprienceDetailModel[@Model.Id].From' />
+        <input type='text' class="form-control datepicker" id='LstExprienceDetailModel_@(Model.Id)__From' name='LstExprienceDetailModel[@Model.Id].From' />
     </div>
 
     <div class="form-group">
         <label>To</label>
-        <input type='date' class="form-control" id='LstExprienceDetailModel_@(Model.Id)__To' name='LstExprienceDetailModel[@Model.Id].To' />
+        <input type='text' class="form-control datepicker" id='LstExprienceDetailModel_@(Model.Id)__To' name='LstExprienceDetailModel[@Model.Id].To' />
     </div>
 
 </div>
+
+<script>
+    $('.datepicker').datepicker({
+        endDate: 'today',
+        autoclose: true,
+        todayHighlight: true
+    })/*.datepicker('update', new Date())*/;
+
+</script>

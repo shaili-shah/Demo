@@ -108,6 +108,22 @@
         float: right;
         margin-right: 10px;
     }
+    .exit-btn {
+        background-color: #3a3636;
+        color: #ffffff;
+        border: none;
+        padding: 10px 20px;
+        font-size: 17px;
+        font-family: Raleway;
+        cursor: pointer;
+    }
+
+    a:hover, a:focus {
+        opacity: 0.8;
+        color: white;
+        text-decoration: none;
+    }
+
 </style>
 
 <body>
@@ -118,7 +134,7 @@
             <h1> Personal Details :</h1>
 
             <div class="form-group">
-                <p><img id="output" width="200" /></p>
+                <p><img id="output" width="200" src="@ViewBag.ImageBase64" /></p>
                 <input type="file" name="postedFile" accept="image/*" onchange="ValidateSingleInput(this);" />
             </div>
 
@@ -136,10 +152,13 @@
 
             <div class="form-group">
                 @Html.LabelFor(m => m.BirthDate)
-                @Html.TextBoxFor(m => m.BirthDate, "{0:MM/dd/yyyy}", new
-                {
-                    @class = "form-control datepicker",required = true
-})
+                        @Html.TextBoxFor(m => m.BirthDate, "{0:MM/dd/yyyy}", new
+                        {
+                            @class = "form-control datepicker",
+                            required = true
+        })
+               
+
                 @Html.ValidationMessageFor(m => m.BirthDate, "", new { @class = "text-danger" })
             </div>
 
@@ -192,17 +211,18 @@
             <h1> Professional Details :</h1>
             @Html.HiddenFor(m => m.ProfessionalDetailId)
             <div class="form-group">
+                <embed src="@ViewBag.ResumeBase64" width="350" height="250" alt="pdf" pluginspage="http://www.adobe.com/products/acrobat/readstep2.html">
                 <input type="file" name="postedResumeFile" />
             </div>
 
             <div class="form-group">
                 @Html.LabelFor(m => m.Year)
-                @Html.TextBoxFor(m => m.Year, new { @class = "form-control" })
+                @Html.TextBoxFor(m => m.Year, new { @class = "form-control", @type = "number", @min = 0 })
             </div>
 
             <div class="form-group">
                 @Html.LabelFor(m => m.Month)
-                @Html.TextBoxFor(m => m.Month, new { @class = "form-control" })
+                @Html.TextBoxFor(m => m.Month, new { @class = "form-control", @type = "number", @min = 0 })
             </div>
 
             <div class="form-group">
@@ -286,12 +306,26 @@
 
                             <div class="form-group">
                                 <label>From</label>
-                                <input type='text' class="form-control datepicker" id='LstExprienceDetailModel_@(i)__From' name='LstExprienceDetailModel[@i].From' value="@item.From.Value.ToString("MM/dd/yyyy")" />
+                                @if (item.From.HasValue)
+                                {
+                                    <input type='text' class="form-control datepicker" id='LstExprienceDetailModel_@(i)__From' name='LstExprienceDetailModel[@i].From' value="@item.From.Value.ToString("MM/dd/yyyy")" />
+                                }
+                                else
+                                {
+                                    <input type='text' class="form-control datepicker" id='LstExprienceDetailModel_@(i)__From' name='LstExprienceDetailModel[@i].From' value="" />
+                                }
                             </div>
 
                             <div class="form-group">
                                 <label>To</label>
-                                <input type='text' class="form-control datepicker" id='LstExprienceDetailModel_@(i)__To' name='LstExprienceDetailModel[@i].To' value="@item.To.Value.ToString("MM/dd/yyyy")" />
+                                @if (item.To.HasValue)
+                                {
+                                    <input type='text' class="form-control datepicker" id='LstExprienceDetailModel_@(i)__To' name='LstExprienceDetailModel[@i].To' value="@item.To.Value.ToString("MM/dd/yyyy")" />
+                                }
+                                else
+                                {
+                                    <input type='text' class="form-control datepicker" id='LstExprienceDetailModel_@(i)__To' name='LstExprienceDetailModel[@i].To' value="" />
+                                }
                             </div>
 
                         </div>
@@ -358,6 +392,7 @@
         <div style="overflow:auto;">
             <div style="float:right;">
                 <button type="button" id="prevBtn" onclick="nextPrev(-1)">Previous</button>
+                <a class="button exit-btn" href="@(Url.Action("Index","Detail"))">Exit</a>
                 <button type="button" id="nextBtn" onclick="nextPrev(1)">Next</button>
             </div>
         </div>
@@ -376,8 +411,11 @@
 <script>
 
     $('.datepicker').datepicker({
-        endDate: 'today'
-    });
+        endDate: 'today',
+        autoclose: true,
+        todayHighlight: true
+    })/*.datepicker('update', new Date())*/;
+
 
     $("#SkillIds").select2({
         width: "200"

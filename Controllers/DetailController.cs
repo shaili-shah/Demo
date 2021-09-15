@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Demo.Models;
 using Demo.Repository;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -47,12 +48,20 @@ namespace Demo.Controllers
             var skills = Ide.GetAllSkills();
             ViewBag.LstSkills = skills;
 
-            TeamDetailModel model = new TeamDetailModel();
+            TeamDetailModel model = new TeamDetailModel();           
             if(id > 0)
             {
                 model = Ide.GetTeamDetailById(id);
+                if(model.FileModel != null && model.FileModel.Data != null)
+                {
+                    string imreBase64Data = Convert.ToBase64String(model.FileModel.Data);
+                    ViewBag.ImageBase64 = "data:image/png;base64,"+ imreBase64Data;
+                }
+                if (model.ResumeFileModel != null && model.ResumeFileModel.Data!=null)
+                {
+                    ViewBag.ResumeBase64 = "data:application/pdf;base64," + Convert.ToBase64String(model.ResumeFileModel.Data, 0, model.ResumeFileModel.Data.Length);
+                }
             }          
-
             return View(model);
         }
 
@@ -61,62 +70,71 @@ namespace Demo.Controllers
         {
             if (ModelState.IsValid)
             {
-                byte[] bytes;
 
-                byte[] rbytes;
-
-                if (postedFile != null)
+                try
                 {
-                    using (BinaryReader br = new BinaryReader(postedFile.InputStream))
+                    byte[] bytes;
+
+                    byte[] rbytes;
+
+                    if (postedFile != null)
                     {
-                        bytes = br.ReadBytes(postedFile.ContentLength);
+                        using (BinaryReader br = new BinaryReader(postedFile.InputStream))
+                        {
+                            bytes = br.ReadBytes(postedFile.ContentLength);
+                        }
+
+                        FileModel fileModel = new FileModel
+                        {
+                            Name = Path.GetFileName(postedFile.FileName),
+                            ContentType = postedFile.ContentType,
+                            Data = bytes
+                        };
+                        model.FileModel = fileModel;
                     }
 
-                    FileModel fileModel = new FileModel
+                    if (postedResumeFile != null)
                     {
-                        Name = Path.GetFileName(postedFile.FileName),
-                        ContentType = postedFile.ContentType,
-                        Data = bytes
-                    };
-                    model.FileModel = fileModel;
-                }
+                        using (BinaryReader br = new BinaryReader(postedResumeFile.InputStream))
+                        {
+                            rbytes = br.ReadBytes(postedResumeFile.ContentLength);
+                        }
 
-                if (postedResumeFile != null)
-                {
-                    using (BinaryReader br = new BinaryReader(postedResumeFile.InputStream))
-                    {
-                        rbytes = br.ReadBytes(postedResumeFile.ContentLength);
+                        FileModel fileModel = new FileModel
+                        {
+                            Name = Path.GetFileName(postedResumeFile.FileName),
+                            ContentType = postedResumeFile.ContentType,
+                            Data = rbytes
+                        };
+                        model.ResumeFileModel = fileModel;
                     }
 
-                    FileModel fileModel = new FileModel
+                    if (model != null && model.LstExprienceDetailModel != null && model.LstExprienceDetailModel.Any())
                     {
-                        Name = Path.GetFileName(postedResumeFile.FileName),
-                        ContentType = postedResumeFile.ContentType,
-                        Data = rbytes
-                    };
-                    model.ResumeFileModel = fileModel;
-                }
+                        model.LstExprienceDetailModel = model.LstExprienceDetailModel.Where(x => x.Company != null).ToList();
+                    }
+                    if (model != null && model.LstEducationDetailModel != null && model.LstEducationDetailModel.Any())
+                    {
+                        model.LstEducationDetailModel = model.LstEducationDetailModel.Where(x => x.Course != null).ToList();
+                    }
 
-                if (model != null && model.LstExprienceDetailModel != null && model.LstExprienceDetailModel.Any())
-                {
-                    model.LstExprienceDetailModel = model.LstExprienceDetailModel.Where(x => x.Company != null).ToList();
+                    if (model.Id > 0)
+                    {
+                       if(model.LstExprienceDetailModel != null)  model.LstExprienceDetailModel.ForEach(x => x.DetailId = model.Id.Value);
+                       if (model.LstEducationDetailModel != null) model.LstEducationDetailModel.ForEach(x => x.DetailId = model.Id.Value);
+                        Ide.EditTeamDetail(model);
+                    }
+                    else
+                    {
+                        Ide.AddTeamDetail(model);
+                    }
+                    return RedirectToAction("Index");
                 }
-                if (model != null && model.LstEducationDetailModel != null && model.LstEducationDetailModel.Any())
+                catch (Exception ex)
                 {
-                    model.LstEducationDetailModel = model.LstEducationDetailModel.Where(x => x.Course != null).ToList();
-                }
-
-                if(model.Id > 0)
-                {
-                    model.LstExprienceDetailModel.ForEach(x => x.DetailId = model.Id.Value);
-                    model.LstEducationDetailModel.ForEach(x => x.DetailId = model.Id.Value);
-                    Ide.EditTeamDetail(model);
-                }
-                else
-                {
-                    Ide.AddTeamDetail(model);
-                }
-                return RedirectToAction("Index");
+                    string msg = ex.Message;
+                    return View();
+                }              
             }
             else
             {
