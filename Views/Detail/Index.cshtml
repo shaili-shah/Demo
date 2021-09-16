@@ -13,32 +13,56 @@
 <!-- #endregion -->
 <h1>Team</h1>
 
-    <table id="tblGrid" class="display" style="width:100%">
-        <thead>
+<table id="tblGrid" class="display" style="width:100%">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Designation</th>
+            <th>Department</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @foreach (var data in Model)
+        {
             <tr>
-                <th>Name</th>
-                <th>Designation</th>
-                <th>Department</th>
-                <th>Action</th>
+                <td>@data.Name </td>
+                <td>@data.Designation </td>
+                <td>@data.Department </td>
+                <td>
+                    <a class="btn btn-primary" style="margin-right:2px;" href="@Url.Action("TeamDetail","Detail", new { id = data.Id})">Edit</a>
+                    <a class="btn btn-danger" onclick="Delete(@data.Id)">Delete</a>
+                </td>
             </tr>
-        </thead>
-        <tbody>
 
-            @foreach (var data in Model)
-            {
-                <tr>
-                    <td>@data.Name </td>
-                    <td>@data.Designation </td>
-                    <td>@data.Department </td>
-                    <td> <a href="@Url.Action("TeamDetail","Detail", new { id = data.Id})">Edit</a> </td>
-                </tr>
+        }
 
-            }
-
-        </tbody>
-    </table>
+    </tbody>
+</table>
 
 <script>
+    function Delete(id) {
+        var confirmation = confirm("are you sure you want to remove the item?");
+        if (confirmation) {
+
+            $.ajax({
+                url: "@Url.Action("Delete","Detail")?id=" + id,
+                type: 'post',
+                success: function (result) {
+                    if (result) {
+                        window.location.href = "@Url.Action("Index","Detail")"
+                    } else {
+                        alert('Failed!');
+                    }
+
+                },
+                error: function () {
+                    alert('error!');
+                }
+            });
+        }
+    }
 
     $(document).ready(function () {
         $('#tblGrid').DataTable({
@@ -46,13 +70,18 @@
             buttons: [
                 {
                     text: 'Add',
+                    className: "btn btn-primary",
+                    attr: {
+                        id: 'add-btn'
+                    },
                     action: function (e, dt, node, config) {
-                         //personalDetails();
                         TeamDetail();
-                    }                    
+                    }
                 }
             ]
         });
+
+        $("#add-btn").removeClass('dt-button');
 
         function TeamDetail() {
             window.location.href = "@Url.Action("TeamDetail", "Detail")"

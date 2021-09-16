@@ -26,5 +26,7 @@ namespace Demo.Repository
         TeamDetailModel GetTeamDetailById(int? id);
 
         bool EditTeamDetail(TeamDetailModel model);
+
+        bool DeleteTeamDetail(int id);
     }
 }

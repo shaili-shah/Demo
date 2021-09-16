@@ -387,10 +387,7 @@ namespace Demo.Repository
             ProfessionalDetailModel professionalDetailModel = new ProfessionalDetailModel();
             professionalDetailModel = mapper.Map<TeamDetailModel, ProfessionalDetailModel>(model);
             professionalDetailModel.DetailId = detail.Id;
-            if (model.SkillIds.Any())
-            {
-                professionalDetailModel.SkillIds = String.Join(",", model.SkillIds);
-            }
+            professionalDetailModel.SkillIds = model.SkillIds.Any() ? String.Join(",", model.SkillIds) : null;
             EditProfessionalDetail(professionalDetailModel);
 
             // current status
@@ -534,6 +531,93 @@ namespace Demo.Repository
             Save();
             return true;
         }
+
+        public bool DeleteBankDetail(BankDetail bankDetail)
+        {
+            _context.BankDetails.Remove(bankDetail);
+            Save();
+            return true;
+        }
+
+        public bool DeleteFile(File file)
+        {
+            _context.Files.Remove(file);
+            Save();
+            return true;
+        }
+
+        public bool DeleteProfessionalDetail(ProfessionalDetail professionalDetail)
+        {
+            _context.ProfessionalDetails.Remove(professionalDetail);
+            Save();
+            return true;
+        }
+
+        public bool DeleteCurrentStatus(CurrentStatu currentStatu)
+        {
+            _context.CurrentStatus.Remove(currentStatu);
+            Save();
+            return true;
+        }
+
+        public bool DeletePersonalDetail(Detail detail)
+        {
+            _context.Details.Remove(detail);
+            Save();
+            return true;
+        }
+
+        public bool DeleteTeamDetail(int id)
+        {
+            var detail = _context.Details.Include(x => x.BankDetails).Include(x => x.ProfessionalDetails)
+                .Include(x => x.CurrentStatus).Include(x => x.ExprienceDetails).Include(x => x.EducationDetails)
+                .FirstOrDefault(x => x.Id == id);
+
+            if(detail != null)
+            {
+                BankDetail bankDetail = detail.BankDetails.FirstOrDefault();
+                ProfessionalDetail professionalDetail = detail.ProfessionalDetails.FirstOrDefault();
+                CurrentStatu currentStatu = detail.CurrentStatus.FirstOrDefault();
+                List<ExprienceDetail> lstExprienceDetail = detail.ExprienceDetails.ToList();
+                List<EducationDetail> lstEducationDetail = detail.EducationDetails.ToList();
+
+                if(bankDetail != null)
+                {
+                    DeleteBankDetail(bankDetail);
+                }
+                if (professionalDetail != null)
+                {
+                    if (professionalDetail.FileId != null)
+                    {
+                        File resumeFile = _context.Files.FirstOrDefault(x => x.Id == professionalDetail.FileId);
+                        if(resumeFile != null) DeleteFile(professionalDetail.File);
+                    }
+                    DeleteProfessionalDetail(professionalDetail);
+                }
+
+                if (currentStatu != null)
+                {
+                    DeleteCurrentStatus(currentStatu);
+                }
+                if (detail.ExprienceDetails.Any())
+                {
+                    DeleteExprienceDetails(lstExprienceDetail);
+                }
+                if (detail.EducationDetails.Any())
+                {
+                    DeleteEducationDetails(lstEducationDetail);
+                }
+                if (detail.FileId > 0)
+                {
+                    File file = _context.Files.FirstOrDefault(x => x.Id == detail.FileId);
+                    if(file != null) DeleteFile(detail.File);
+                }
+                DeletePersonalDetail(detail);
+            }
+            return true;
+        }
+
+
         #endregion
 
     }

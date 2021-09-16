@@ -59,7 +59,7 @@ namespace Demo.Controllers
                 {
                     ViewBag.ResumeBase64 = "data:application/pdf;base64," + Convert.ToBase64String(model.ResumeFileModel.Data, 0, model.ResumeFileModel.Data.Length);
                 }
-            }          
+            }             
             return View(model);
         }
 
@@ -80,8 +80,8 @@ namespace Demo.Controllers
                     if (model.WorkingFrom == DateTime.MinValue) {
                         ViewBag.errorMsg = "Please select valid workingFrom.";
                         return View(new TeamDetailModel());
-                    }                    
-
+                    }
+                  
                     byte[] bytes;
 
                     byte[] rbytes;
@@ -147,7 +147,7 @@ namespace Demo.Controllers
             }
             else
             {
-                IEnumerable<ModelError> allErrors = ModelState.Values.SelectMany(v => v.Errors);              
+                IEnumerable<ModelError> allErrors = ModelState.Values.SelectMany(v => v.Errors);                             
                 return View(model);
             }
         }
@@ -164,11 +164,18 @@ namespace Demo.Controllers
             return View("_NewEducationDetailRow", model);
         }
 
-        public ActionResult Detail(int? activeTab)
+        public ActionResult Delete(int id)
         {
-            ViewBag.ActiveTab = activeTab;
-            return View();
-        }       
+            try
+            {
+                Ide.DeleteTeamDetail(id);
+                return Json(true, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(false, JsonRequestBehavior.AllowGet);
+            }            
+        }         
 
     }
 }
