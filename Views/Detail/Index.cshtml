@@ -33,6 +33,7 @@
                 <td>
                     <a class="btn btn-primary" style="margin-right:2px;" href="@Url.Action("TeamDetail","Detail", new { id = data.Id})">Edit</a>
                     <a class="btn btn-danger" onclick="Delete(@data.Id)">Delete</a>
+                    <a class="btn btn-primary" href="@Url.Action("SendMail","Detail" , new { id = data.Id })">Send Mail</a>
                 </td>
             </tr>
 

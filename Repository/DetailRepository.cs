@@ -27,7 +27,11 @@ namespace Demo.Repository
         public IEnumerable<Skill> GetAllSkills()
         {
             return _context.Skills.ToList();
+        }
 
+        public Skill GetSkillById(int id)
+        {
+            return _context.Skills.FirstOrDefault(x => x.Id == id);
         }
 
         public TeamDetailModel GetTeamDetailById(int? id)

@@ -5,6 +5,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Mail;
+using System.Net.Mime;
 using System.Web;
 using System.Web.Mvc;
 
@@ -46,20 +49,20 @@ namespace Demo.Controllers
             var skills = Ide.GetAllSkills();
             ViewBag.LstSkills = skills;
 
-            TeamDetailModel model = new TeamDetailModel();           
-            if(id > 0)
+            TeamDetailModel model = new TeamDetailModel();
+            if (id > 0)
             {
                 model = Ide.GetTeamDetailById(id);
-                if(model.FileModel != null && model.FileModel.Data != null)
+                if (model.FileModel != null && model.FileModel.Data != null)
                 {
                     string imreBase64Data = Convert.ToBase64String(model.FileModel.Data);
-                    ViewBag.ImageBase64 = "data:image/png;base64,"+ imreBase64Data;
+                    ViewBag.ImageBase64 = "data:image/png;base64," + imreBase64Data;
                 }
-                if (model.ResumeFileModel != null && model.ResumeFileModel.Data!=null)
+                if (model.ResumeFileModel != null && model.ResumeFileModel.Data != null)
                 {
                     ViewBag.ResumeBase64 = "data:application/pdf;base64," + Convert.ToBase64String(model.ResumeFileModel.Data, 0, model.ResumeFileModel.Data.Length);
                 }
-            }             
+            }
             return View(model);
         }
 
@@ -72,16 +75,18 @@ namespace Demo.Controllers
             {
                 try
                 {
-                    if (model.BirthDate == DateTime.MinValue) {
+                    if (model.BirthDate == DateTime.MinValue)
+                    {
 
                         ViewBag.errorMsg = "Please select valid BirthDate.";
                         return View(new TeamDetailModel());
-                    } 
-                    if (model.WorkingFrom == DateTime.MinValue) {
+                    }
+                    if (model.WorkingFrom == DateTime.MinValue)
+                    {
                         ViewBag.errorMsg = "Please select valid workingFrom.";
                         return View(new TeamDetailModel());
                     }
-                  
+
                     byte[] bytes;
 
                     byte[] rbytes;
@@ -124,13 +129,13 @@ namespace Demo.Controllers
                     }
                     if (model != null && model.LstEducationDetailModel != null && model.LstEducationDetailModel.Any())
                     {
-                        model.LstEducationDetailModel = model.LstEducationDetailModel.Where(x => x.Course != null && x.University!=null).ToList();
+                        model.LstEducationDetailModel = model.LstEducationDetailModel.Where(x => x.Course != null && x.University != null).ToList();
                     }
 
                     if (model.Id > 0)
                     {
-                       if(model.LstExprienceDetailModel != null)  model.LstExprienceDetailModel.ForEach(x => x.DetailId = model.Id.Value);
-                       if (model.LstEducationDetailModel != null) model.LstEducationDetailModel.ForEach(x => x.DetailId = model.Id.Value);
+                        if (model.LstExprienceDetailModel != null) model.LstExprienceDetailModel.ForEach(x => x.DetailId = model.Id.Value);
+                        if (model.LstEducationDetailModel != null) model.LstEducationDetailModel.ForEach(x => x.DetailId = model.Id.Value);
                         Ide.EditTeamDetail(model);
                     }
                     else
@@ -143,11 +148,11 @@ namespace Demo.Controllers
                 {
                     ViewBag.errorMsg = ex.Message;
                     return View(new TeamDetailModel());
-                }              
+                }
             }
             else
             {
-                IEnumerable<ModelError> allErrors = ModelState.Values.SelectMany(v => v.Errors);                             
+                IEnumerable<ModelError> allErrors = ModelState.Values.SelectMany(v => v.Errors);
                 return View(model);
             }
         }
@@ -174,8 +179,120 @@ namespace Demo.Controllers
             catch (Exception ex)
             {
                 return Json(false, JsonRequestBehavior.AllowGet);
-            }            
-        }         
+            }
+        }
+
+        public ActionResult SendMail(int id)
+        {
+            MailModel objModelMail = new MailModel();
+            string from = "shaili.albiorix@gmail.com";
+            objModelMail.To = "joseph.meza112@gmail.com";
+
+            objModelMail.Subject = "Details";
+            TeamDetailModel model = Ide.GetTeamDetailById(id);
+            string body = PopulateBody(model);
+            objModelMail.Body = body;
+
+            using (MailMessage mail = new MailMessage(from, objModelMail.To))
+            {
+                mail.Subject = objModelMail.Subject;
+                mail.Body = objModelMail.Body;                
+
+                if(model.FileModel != null)
+                {
+                    MemoryStream strm = new MemoryStream(model.FileModel.Data);
+                    Attachment data = new Attachment(strm, model.FileModel.Name);
+                    ContentDisposition disposition = data.ContentDisposition;
+                    data.ContentId = model.FileModel.Name;
+                    data.ContentDisposition.Inline = true;
+                    mail.Attachments.Add(data);
+                }
+
+                if (model.ResumeFileModel != null)
+                {
+                    MemoryStream strm = new MemoryStream(model.ResumeFileModel.Data);
+                    Attachment rdata = new Attachment(strm, model.ResumeFileModel.Name);
+                    ContentDisposition disposition = rdata.ContentDisposition;
+                    rdata.ContentId = model.ResumeFileModel.Name;
+                    rdata.ContentDisposition.Inline = true;
+                    mail.Attachments.Add(rdata);
+                }
+
+                mail.IsBodyHtml = true;
+                SmtpClient smtp = new SmtpClient();
+                smtp.Host = "smtp.gmail.com";
+                smtp.EnableSsl = true;
+                NetworkCredential networkCredential = new NetworkCredential(from, "Shaili@123");
+                smtp.UseDefaultCredentials = true;
+                smtp.Credentials = networkCredential;
+                smtp.Port = 587;
+                smtp.Send(mail);
+            }
+            return RedirectToAction("Index");
+        }
+
+        private string PopulateBody(TeamDetailModel model)
+        {
+            string body = string.Empty;
+            using (StreamReader reader = new StreamReader(Server.MapPath("~/DetailMailTemplate.html")))
+            {
+                body = reader.ReadToEnd();
+            }
+            string userName = model.FirstName + " " + model.LastName;
+            string birthDate = model.BirthDate.ToString();
+
+            string year = model.Year.HasValue ? model.Year.ToString() : "-";
+            string month = model.Month.HasValue ? model.Month.ToString() : "-";
+            
+            string skillIds = model.SkillIds.Any() ? String.Join(",", model.SkillIds) : null;
+            string lstSkillName = "-";
+            if (!string.IsNullOrWhiteSpace(skillIds))
+            {
+                model.SkillIds = skillIds.Split(',').Select(int.Parse).ToList();
+
+                List<string> lstSkill = new List<string>();
+                foreach(var item in model.SkillIds)
+                {
+                    string skillName = "";
+                    Skill skill = Ide.GetSkillById(item);
+                    if(skill != null)
+                    {
+                        skillName = skill.Name;
+                        lstSkill.Add(skillName);
+                    }
+                }
+                lstSkillName = string.Join(",", lstSkill);
+            }
+
+            string currentCTC = model.CTC ?? "-";
+            string workingFrom = model.WorkingFrom != null ? model.WorkingFrom.ToString() : "-";
+
+            body = body.Replace("[UserName]", userName);
+            body = body.Replace("[FirstName]", model.FirstName);
+            body = body.Replace("[LastName]", model.LastName);
+            body = body.Replace("[BirthDate]", birthDate);
+            body = body.Replace("[Phone]", model.Phone);
+            body = body.Replace("[Email]", model.Email);
+
+            body = body.Replace("[AccountNo]", model.AccountNo);
+            body = body.Replace("[IFSC]", model.IFSC);
+            body = body.Replace("[PanCardNo]", model.PanCardNo);
+            body = body.Replace("[AadharCardNo]", model.AadharCardNo);
+
+            body = body.Replace("[Year]", year);
+            body = body.Replace("[Month]", month);
+            body = body.Replace("[Skills]", lstSkillName);
+            
+            body = body.Replace("[CurrentCompany]", model.Company);
+            body = body.Replace("[CurrrentDesignation]", model.Designation);
+            body = body.Replace("[CurrentDepartment]", model.Department);
+            body = body.Replace("[CurrentCTC]", currentCTC);
+            body = body.Replace("[WorkingFrom]", workingFrom);
+
+
+            return body;
+        }
+
 
     }
 }
