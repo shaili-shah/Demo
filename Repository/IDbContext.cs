@@ -6,5 +6,6 @@ namespace Demo.Repository
     {
         IDbSet<TEntity> Set<TEntity>() where TEntity : class;
         int SaveChanges();
+       
     }
 }

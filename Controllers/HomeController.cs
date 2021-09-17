@@ -17,7 +17,9 @@ namespace Demo.Controllers
         public ActionResult Index()
         {
            var skills =  detailService.GetAllSkill().ToList();
-            List<Skill> lstskill = new List<Skill>();
+
+            var getPersonaldetail = detailService.GetPersonalDetail().ToList();
+
             return View();
         }
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Validation;
 using System.Linq;
@@ -46,7 +47,7 @@ namespace Demo.Repository
                 var fail = new Exception(msg, dbEx);
                 throw fail;
             }
-        }
+        }   
 
         public void Update(T entity)
         {
@@ -56,6 +57,14 @@ namespace Demo.Repository
                 {
                     throw new ArgumentNullException("entity");
                 }
+                //DbSet.Attach(entity);
+                //var entry = _context.Entry(entity);
+                //entry.State = System.Data.Entity.EntityState.Modified;
+
+
+
+                // _context.Entry(entity).State = EntityState.Modified;
+               // _context.Entry(entity).State = EntityState.Modified;
                 this._context.SaveChanges();
             }
             catch (DbEntityValidationException dbEx)

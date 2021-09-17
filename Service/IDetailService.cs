@@ -1,13 +1,27 @@
-﻿using System.Linq;
+﻿using Demo.Models;
+using System.Linq;
 
 namespace Demo.Service
 {
     public interface IDetailService
     {
         IQueryable<Skill> GetAllSkill();
-        //User GetUser(long id);
-        //void InsertUser(User user);
-        //void UpdateUser(User user);
-        //void DeleteUser(User user);
+
+        Skill GetSkillById(int id);
+
+        IQueryable<Detail> GetPersonalDetail();
+
+        IQueryable<ExprienceDetail> GetOldExprienceDetail(int? detailId);
+
+        IQueryable<EducationDetail> GetOldEducationDetail(int? detailId);
+
+        TeamDetailModel GetTeamDetailById(int? id);
+
+        bool AddTeamDetail(TeamDetailModel model);
+
+        bool EditTeamDetail(TeamDetailModel model);
+
+        bool DeleteTeamDetail(int id);
+
     }
 }
