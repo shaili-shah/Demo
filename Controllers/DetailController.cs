@@ -1,6 +1,4 @@
-﻿using AutoMapper;
-using Demo.Models;
-using Demo.Repository;
+﻿using Demo.Models;
 using Demo.Service;
 using System;
 using System.Collections.Generic;
@@ -17,25 +15,17 @@ namespace Demo.Controllers
     public class DetailController : Controller
     {
 
-       // private IDetail Ide;
-
         private IDetailService detailService;
 
         public DetailController(IDetailService detailService)
         {
             this.detailService = detailService;
-        }
-
-        //public DetailController()
-        //{
-        //    Ide = new DetailRepository(new DemoEntities());
-        //}
+        }       
 
         // GET: Detail
         public ActionResult Index()
         {
-            var list = detailService.GetPersonalDetail();
-            //var list = Ide.GetPersonalDetail();
+            var list = detailService.GetPersonalDetail();            
             TeamModel model = new TeamModel();
             List<TeamModel> lstmodel = new List<TeamModel>();
             foreach (var item in list)
@@ -56,14 +46,12 @@ namespace Demo.Controllers
         public ActionResult TeamDetail(int? id)
         {
             var skills = detailService.GetAllSkill().ToList();
-            //var skills = Ide.GetAllSkills();
             ViewBag.LstSkills = skills;
 
             TeamDetailModel model = new TeamDetailModel();
             if (id > 0)
             {
                 model = detailService.GetTeamDetailById(id);
-                //model = Ide.GetTeamDetailById(id);
                 if (model.FileModel != null && model.FileModel.Data != null)
                 {
                     string imreBase64Data = Convert.ToBase64String(model.FileModel.Data);
@@ -81,7 +69,6 @@ namespace Demo.Controllers
         public ActionResult TeamDetail(TeamDetailModel model, HttpPostedFileBase postedFile, HttpPostedFileBase postedResumeFile)
         {
             var skills = detailService.GetAllSkill().ToList();
-            //var skills = Ide.GetAllSkills();
             ViewBag.LstSkills = skills;
             if (ModelState.IsValid)
             {
@@ -149,12 +136,10 @@ namespace Demo.Controllers
                         if (model.LstExprienceDetailModel != null) model.LstExprienceDetailModel.ForEach(x => x.DetailId = model.Id.Value);
                         if (model.LstEducationDetailModel != null) model.LstEducationDetailModel.ForEach(x => x.DetailId = model.Id.Value);
                         detailService.EditTeamDetail(model);
-                        //Ide.EditTeamDetail(model);
                     }
                     else
                     {
                         detailService.AddTeamDetail(model);
-                       // Ide.AddTeamDetail(model);
                     }
                     return RedirectToAction("Index");
                 }
@@ -188,7 +173,6 @@ namespace Demo.Controllers
             try
             {
                 detailService.DeleteTeamDetail(id);
-               // Ide.DeleteTeamDetail(id);
                 return Json(true, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
@@ -208,7 +192,6 @@ namespace Demo.Controllers
 
             objModelMail.Subject = "Details";
             TeamDetailModel model = detailService.GetTeamDetailById(id);
-           // TeamDetailModel model = Ide.GetTeamDetailById(id);
             string body = PopulateBody(model);
             objModelMail.Body = body;
 
@@ -274,7 +257,6 @@ namespace Demo.Controllers
                 {
                     string skillName = "";
                     Skill skill = detailService.GetSkillById(item);
-                    //Skill skill = Ide.GetSkillById(item);
                     if(skill != null)
                     {
                         skillName = skill.Name;

@@ -1,6 +1,5 @@
 ﻿using Demo.Repository;
 using System;
-using System.Configuration;
 using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration;
 using System.Linq;
@@ -10,9 +9,6 @@ namespace Demo
 {
     public class IocDbContext : DbContext ,IDbContext
     {
-
-       // private static string con = ConfigurationManager.ConnectionStrings["DemoEntities"].ConnectionString;
-
         public IocDbContext()
            : base("name=DemoEntities")
         {

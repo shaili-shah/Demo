@@ -53,7 +53,6 @@ namespace Demo.Service
         public Skill GetSkillById(int id)
         {
             return skillRepository.GetById(id);
-            //return _context.Skills.FirstOrDefault(x => x.Id == id);
         }
 
         public IQueryable<Detail> GetPersonalDetail()
@@ -74,10 +73,7 @@ namespace Demo.Service
         public TeamDetailModel GetTeamDetailById(int? id)
         {
             TeamDetailModel model = new TeamDetailModel();
-            //var detail = _context.Details.Include(x => x.BankDetails).Include(x => x.ProfessionalDetails)
-            //    .Include(x => x.CurrentStatus).Include(x => x.ExprienceDetails).Include(x => x.EducationDetails)
-            //    .FirstOrDefault(x => x.Id == id);
-
+           
             var detail = detailRepository.Table.Include(x => x.BankDetails).Include(x => x.ProfessionalDetails)
                .Include(x => x.CurrentStatus).Include(x => x.ExprienceDetails).Include(x => x.EducationDetails)
                .FirstOrDefault(x => x.Id == id);
@@ -97,7 +93,6 @@ namespace Demo.Service
                 IMapper mapper = config.CreateMapper();
                 model = mapper.Map<Detail, TeamDetailModel>(detail);
                 File file = fileRepository.GetById(detail.FileId);
-               // File file = _context.Files.FirstOrDefault(x => x.Id == detail.FileId);
                 if (file != null)
                 {
                     FileModel fileModel = new FileModel();
@@ -125,7 +120,6 @@ namespace Demo.Service
                     }
                     int? resumeId = detail.ProfessionalDetails.FirstOrDefault().FileId;
                     File resume = fileRepository.GetById(resumeId);
-                    //File resume = _context.Files.FirstOrDefault(x => x.Id == resumeId);
                     if (resume != null)
                     {
                         FileModel resumeFileModel = new FileModel();
@@ -376,7 +370,6 @@ namespace Demo.Service
             {
                 List<ExprienceDetail> oldExprienceDetails = new List<ExprienceDetail>();
                 oldExprienceDetails = GetOldExprienceDetail(model.Id).ToList();
-                //oldExprienceDetails = _context.ExprienceDetails.Where(x => x.DetailId == model.Id).ToList();
                 if (oldExprienceDetails.Any())
                 {
                     DeleteExprienceDetails(oldExprienceDetails);
@@ -394,7 +387,6 @@ namespace Demo.Service
             {
                 List<EducationDetail> oldEducationDetails = new List<EducationDetail>();
                 oldEducationDetails = GetOldEducationDetail(model.Id).ToList();
-                //oldEducationDetails = _context.EducationDetails.Where(x => x.DetailId == model.Id).ToList();
                 if (oldEducationDetails.Any())
                 {
                     DeleteEducationDetails(oldEducationDetails);
@@ -425,9 +417,7 @@ namespace Demo.Service
                 data.FileId = file.Id;
             }
             detailRepository.Update(data);
-            //UpdatePersonalDetail(data);
-            //Save();
-
+          
             return data;
         }
 
@@ -442,9 +432,7 @@ namespace Demo.Service
             var data = mapper.Map<BankDetailModel, BankDetail>(model);
             data.Id = model.BankDetailId;
             bankDetailRepository.Update(data);
-            //UpdateBankDetail(data);
-            //Save();
-
+            
             return true;
         }
 
@@ -466,8 +454,7 @@ namespace Demo.Service
                 data.FileId = file.Id;
             }
             professionalDetailRepository.Update(data);
-            //UpdateProfessionalDetail(data);
-            //Save();
+            
             return true;
         }
 
@@ -482,8 +469,7 @@ namespace Demo.Service
             var data = mapper.Map<CurrentStatusModel, CurrentStatu>(model);
             data.Id = model.CurrentStatusId;
             currentStatusRepository.Update(data);
-            //UpdateCurrentStatus(data);
-            //Save();
+            
             return true;
         }
 
@@ -512,10 +498,7 @@ namespace Demo.Service
 
         public bool DeleteTeamDetail(int id)
         {
-            //var detail = _context.Details.Include(x => x.BankDetails).Include(x => x.ProfessionalDetails)
-            //    .Include(x => x.CurrentStatus).Include(x => x.ExprienceDetails).Include(x => x.EducationDetails)
-            //    .FirstOrDefault(x => x.Id == id);
-
+            
             var detail = detailRepository.Table.Include(x=>x.BankDetails).Include(x=>x.ProfessionalDetails)
                 .Include(x => x.CurrentStatus).Include(x => x.ExprienceDetails).Include(x => x.EducationDetails)
                 .FirstOrDefault(x=>x.Id == id);
@@ -537,7 +520,6 @@ namespace Demo.Service
                     if (professionalDetail.FileId != null)
                     {
                         File resumeFile = fileRepository.GetById(professionalDetail.FileId);
-                        //File resumeFile = _context.Files.FirstOrDefault(x => x.Id == professionalDetail.FileId);
                         if (resumeFile != null) fileRepository.Delete(professionalDetail.File);
                     }
                     professionalDetailRepository.Delete(professionalDetail);
@@ -558,7 +540,6 @@ namespace Demo.Service
                 if (detail.FileId > 0)
                 {
                     File file = fileRepository.GetById(detail.FileId);
-                    //File file = _context.Files.FirstOrDefault(x => x.Id == detail.FileId);
                     if (file != null) fileRepository.Delete(detail.File);
                 }
                 detailRepository.Delete(detail);

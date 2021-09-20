@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Validation;
 using System.Linq;
 
 namespace Demo.Repository
-{   
+{
     public class Repository<T> : IRepository<T> where T : class
     {       
         private readonly IDbContext _context;
@@ -57,9 +56,7 @@ namespace Demo.Repository
                 {
                     throw new ArgumentNullException("entity");
                 }
-                _context.Update(entity);
-                //_context.Entry(entity).State = EntityState.Modified;
-               
+                _context.Update(entity);                
                 this._context.SaveChanges();
             }
             catch (DbEntityValidationException dbEx)
