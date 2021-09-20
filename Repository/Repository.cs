@@ -57,14 +57,9 @@ namespace Demo.Repository
                 {
                     throw new ArgumentNullException("entity");
                 }
-                //DbSet.Attach(entity);
-                //var entry = _context.Entry(entity);
-                //entry.State = System.Data.Entity.EntityState.Modified;
-
-
-
-                // _context.Entry(entity).State = EntityState.Modified;
-               // _context.Entry(entity).State = EntityState.Modified;
+                _context.Update(entity);
+                //_context.Entry(entity).State = EntityState.Modified;
+               
                 this._context.SaveChanges();
             }
             catch (DbEntityValidationException dbEx)

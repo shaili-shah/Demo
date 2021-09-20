@@ -34,5 +34,9 @@ namespace Demo
         {
             return base.Set<TEntity>();
         }
+
+       void IDbContext.Update<TEntity>(TEntity entity){        
+            Entry(entity).State = EntityState.Modified;
+        }
     }
 }
